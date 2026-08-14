@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Arapuá Hotéis - Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}">
+    
+        <link rel="icon"
+          type="image/png"
+          href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-symbol">
+                ✦
+            </div>
+
+            <div class="logo-text">
+                <strong>ARAPUÁ</strong>
+                <span>HOTÉIS</span>
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+            <a href="#" class="menu-item active">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-hotel"></i>
+                <span>Hotéis</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-bed"></i>
+                <span>Quartos</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <span>Hóspedes</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Reservas</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Check-in</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Check-out</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Consumos</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Pagamentos</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Relatórios</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-users"></i>
+                <span>Usuários</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="fa-solid fa-gear"></i>
+                <span>Configurações</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <div class="footer-logo">
+                🌿
+            </div>
+
+            <strong>ARAPUÁ HOTÉIS</strong>
+
+            <span>Tradição em receber bem!</span>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="mobile-menu"
+                    id="mobileMenu"
+                    type="button"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div>
+
+                    <strong>Dashboard</strong>
+
+                    <span>
+                        Visão geral do sistema
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+
+                <div class="user">
+
+                    <div class="avatar">
+                        TS
+                    </div>
+
+                    <div class="user-info">
+
+                        <span>Bem-vindo,</span>
+                        <strong>Telê Santana</strong>
+
+                    </div>
+
+                    <i class="fa-solid fa-chevron-down user-arrow"></i>
+
+                </div>
+
+
+                <button
+                    class="logout"
+                    id="logoutButton"
+                    type="button"
+                >
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Sair</span>
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             CONTENT
+        ====================================================== -->
+
+        <section class="content">
+
+
+            <!-- WELCOME -->
+
+            <div class="welcome">
+
+                <div>
+
+                    <h1>
+                        Olá, Telê Santana!
+                    </h1>
+
+                    <p>
+                        Bem-vindo ao sistema de gestão da Arapuá Hotéis.
+                    </p>
+
+                </div>
+
+
+                <div class="date-box">
+
+                    <i class="fa-regular fa-calendar-days"></i>
+
+                    <div>
+
+                        <strong>
+                            11 de agosto de 2025
+                        </strong>
+
+                        <span>
+                            Segunda-feira
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 INDICADORES
+            ================================================== -->
+
+            <div class="stats-grid">
+
+
+                <!-- HOTÉIS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-hotel"></i>
+                    </div>
+
+                    <div class="stat-info">
+
+                        <strong>4</strong>
+
+                        <span>Hotéis</span>
+
+                        <small>Ativos</small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUARTOS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        <i class="fa-solid fa-bed"></i>
+                    </div>
+
+                    <div class="stat-info">
+
+                        <strong>127</strong>
+
+                        <span>Quartos</span>
+
+                        <small>Cadastrados</small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RESERVAS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+
+                    <div class="stat-info">
+
+                        <strong>56</strong>
+
+                        <span>Reservas</span>
+
+                        <small>Hoje</small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHECK-IN -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+
+                    <div class="stat-info">
+
+                        <strong>28</strong>
+
+                        <span>Check-ins</span>
+
+                        <small>Hoje</small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHECK-OUT -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-door-open"></i>
+                    </div>
+
+                    <div class="stat-info">
+
+                        <strong>15</strong>
+
+                        <span>Check-outs</span>
+
+                        <small>Hoje</small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FATURAMENTO -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        <i class="fa-regular fa-credit-card"></i>
+                    </div>
+
+                    <div class="stat-info revenue">
+
+                        <strong>
+                            R$ 18.650,00
+                        </strong>
+
+                        <span>Faturamento</span>
+
+                        <small>Hoje</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PRIMEIRA LINHA
+            ================================================== -->
+
+            <div class="dashboard-grid first-row">
+
+
+                <!-- OCUPAÇÃO -->
+
+                <div class="panel occupation-panel">
+
+                    <div class="panel-header">
+
+                        <h2>
+                            <i class="fa-solid fa-chart-pie"></i>
+                            Taxa de ocupação
+                        </h2>
+
+                        <select id="periodSelect">
+                            <option>Esta semana</option>
+                            <option>Este mês</option>
+                            <option>Este ano</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="occupation-content">
+
+                        <div class="donut">
+
+                            <div class="donut-center">
+
+                                <strong>72%</strong>
+
+                                <span>
+                                    Ocupação média
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="occupation-info">
+
+                            <div class="legend-item">
+
+                                <span class="legend-dot green-dot"></span>
+
+                                <div>
+
+                                    <strong>
+                                        Quartos ocupados
+                                    </strong>
+
+                                    <span>
+                                        91 quartos
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="legend-item">
+
+                                <span class="legend-dot red-dot"></span>
+
+                                <div>
+
+                                    <strong>
+                                        Quartos disponíveis
+                                    </strong>
+
+                                    <span>
+                                        36 quartos
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="total-rooms">
+
+                                <span>
+                                    Total de quartos
+                                </span>
+
+                                <strong>
+                                    127
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RESERVAS -->
+
+                <div class="panel reservations-panel">
+
+                    <div class="panel-header">
+
+                        <h2>
+                            <i class="fa-solid fa-calendar-check"></i>
+                            Reservas dos próximos 7 dias
+                        </h2>
+
+                    </div>
+
+
+                    <div class="reservation-list">
+
+
+                        <div class="reservation">
+
+                            <div class="guest-avatar">
+                                JP
+                            </div>
+
+                            <div class="reservation-info">
+
+                                <strong>
+                                    João Pedro Silva
+                                </strong>
+
+                                <span>
+                                    Quarto 101 - Arapuá Palmas
+                                </span>
+
+                            </div>
+
+                            <div class="reservation-date">
+                                12/08/2025
+                            </div>
+
+                            <span class="status confirmed">
+                                Confirmada
+                            </span>
+
+                        </div>
+
+
+                        <div class="reservation">
+
+                            <div class="guest-avatar">
+                                MO
+                            </div>
+
+                            <div class="reservation-info">
+
+                                <strong>
+                                    Maria Oliveira Santos
+                                </strong>
+
+                                <span>
+                                    Quarto 205 - Arapuá Goiânia
+                                </span>
+
+                            </div>
+
+                            <div class="reservation-date">
+                                12/08/2025
+                            </div>
+
+                            <span class="status confirmed">
+                                Confirmada
+                            </span>
+
+                        </div>
+
+
+                        <div class="reservation">
+
+                            <div class="guest-avatar">
+                                CM
+                            </div>
+
+                            <div class="reservation-info">
+
+                                <strong>
+                                    Carlos Mendes
+                                </strong>
+
+                                <span>
+                                    Quarto 302 - Arapuá Brasília
+                                </span>
+
+                            </div>
+
+                            <div class="reservation-date">
+                                13/08/2025
+                            </div>
+
+                            <span class="status pending">
+                                Pendente
+                            </span>
+
+                        </div>
+
+
+                        <div class="reservation">
+
+                            <div class="guest-avatar">
+                                FL
+                            </div>
+
+                            <div class="reservation-info">
+
+                                <strong>
+                                    Fernanda Lima
+                                </strong>
+
+                                <span>
+                                    Quarto 110 - Arapuá Palmas
+                                </span>
+
+                            </div>
+
+                            <div class="reservation-date">
+                                14/08/2025
+                            </div>
+
+                            <span class="status confirmed">
+                                Confirmada
+                            </span>
+
+                        </div>
+
+
+                        <div class="reservation">
+
+                            <div class="guest-avatar">
+                                RA
+                            </div>
+
+                            <div class="reservation-info">
+
+                                <strong>
+                                    Ricardo Almeida
+                                </strong>
+
+                                <span>
+                                    Quarto 203 - Arapuá Goiânia
+                                </span>
+
+                            </div>
+
+                            <div class="reservation-date">
+                                15/08/2025
+                            </div>
+
+                            <span class="status confirmed">
+                                Confirmada
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="view-all"
+                        id="viewReservations"
+                        type="button"
+                    >
+                        Ver todas as reservas
+                    </button>
+
+                </div>
+
+
+                <!-- MOVIMENTAÇÕES -->
+
+                <div class="panel movements-panel">
+
+                    <div class="panel-header">
+
+                        <h2>
+                            <i class="fa-solid fa-angles-right"></i>
+                            Check-ins e Check-outs de hoje
+                        </h2>
+
+                    </div>
+
+
+                    <div class="movement-box checkin-box">
+
+                        <div class="movement-title">
+
+                            <span>
+                                Check-ins
+                            </span>
+
+                            <strong>
+                                28
+                            </strong>
+
+                        </div>
+
+
+                        <div class="hotel-row">
+                            <span>Arapuá Palmas</span>
+                            <strong>12</strong>
+                        </div>
+
+                        <div class="hotel-row">
+                            <span>Arapuá Goiânia</span>
+                            <strong>9</strong>
+                        </div>
+
+                        <div class="hotel-row">
+                            <span>Arapuá Brasília</span>
+                            <strong>7</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="movement-box checkout-box">
+
+                        <div class="movement-title">
+
+                            <span>
+                                Check-outs
+                            </span>
+
+                            <strong>
+                                15
+                            </strong>
+
+                        </div>
+
+
+                        <div class="hotel-row">
+                            <span>Arapuá Palmas</span>
+                            <strong>6</strong>
+                        </div>
+
+                        <div class="hotel-row">
+                            <span>Arapuá Goiânia</span>
+                            <strong>5</strong>
+                        </div>
+
+                        <div class="hotel-row">
+                            <span>Arapuá Brasília</span>
+                            <strong>4</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SEGUNDA LINHA
+            ================================================== -->
+
+            <div class="dashboard-grid second-row">
+
+
+                <!-- FATURAMENTO -->
+
+                <div class="panel billing-panel">
+
+                    <div class="panel-header">
+
+                        <h2>
+                            <i class="fa-solid fa-chart-column"></i>
+                            Faturamento dos últimos 7 dias
+                        </h2>
+
+                    </div>
+
+
+                    <div class="chart">
+
+                        <div class="chart-y">
+
+                            <span>R$ 20.000</span>
+                            <span>R$ 15.000</span>
+                            <span>R$ 10.000</span>
+                            <span>R$ 5.000</span>
+                            <span>R$ 0</span>
+
+                        </div>
+
+
+                        <div class="bars">
+
+                            <div class="bar-column">
+
+                                <div
+                                    class="bar"
+                                    style="height:58%"
+                                ></div>
+
+                                <span>05/08</span>
+
+                            </div>
+
+
+                            <div class="bar-column">
+
+                                <div
+                                    class="bar"
+                                    style="height:51%"
+                                ></div>
+
+                                <span>06/08</span>
+
+                            </div>
+
+
+                            <div class="bar-column">
+
+                                <div
+                                    class="bar"
+                                    style="height:75%"
+                                ></div>
+
+                                <span>07/08</span>
+
+                            </div>
+
+
+                            <div class="bar-column">
+
+                                <div
+                                    class="bar"
+                                    style="height:52%"
+                                ></div>
+
+                                <span>08/08</span>
+
+                            </div>
+
+
+                            <div class="bar-column">
+
+                                <div
+                                    class="bar"
+                                    style="height:68%"
+                                ></div>
+
+                                <span>09/08</span>
+
+                            </div>
+
+
+                            <div class="bar-column">
+
+                                <div
+                                    class="bar"
+                                    style="height:51%"
+                                ></div>
+
+                                <span>10/08</span>
+
+                            </div>
+
+
+                            <div class="bar-column">
+
+                                <div
+                                    class="bar today"
+                                    style="height:82%"
+                                ></div>
+
+                                <span>11/08</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ALERTAS -->
+
+                <div class="panel alerts-panel">
+
+                    <div class="panel-header">
+
+                        <h2>
+                            <i class="fa-solid fa-bell"></i>
+                            Alertas e avisos
+                        </h2>
+
+                    </div>
+
+
+                    <div class="alert-list">
+
+
+                        <div class="alert-item danger">
+
+                            <div class="alert-icon">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    5 reservas pendentes de confirmação
+                                </strong>
+
+                                <span>
+                                    Aguardando confirmação do pagamento
+                                </span>
+
+                            </div>
+
+                            <i class="fa-solid fa-chevron-right"></i>
+
+                        </div>
+
+
+                        <div class="alert-item warning">
+
+                            <div class="alert-icon">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    3 quartos em manutenção
+                                </strong>
+
+                                <span>
+                                    Verifique os quartos e atualize o status
+                                </span>
+
+                            </div>
+
+                            <i class="fa-solid fa-chevron-right"></i>
+
+                        </div>
+
+
+                        <div class="alert-item success">
+
+                            <div class="alert-icon">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Backup realizado com sucesso
+                                </strong>
+
+                                <span>
+                                    Último backup: 11/08/2025 03:00
+                                </span>
+
+                            </div>
+
+                            <i class="fa-solid fa-chevron-right"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- Bootstrap -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<script
+    src="{{ url_for('static', filename='js/dashboard.js') }}">
+</script>
+
+</body>
+</html>
