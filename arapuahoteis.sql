@@ -231,6 +231,13 @@ CREATE TABLE pagamentos (
 
     CHECK (valor > 0)
 );
+INSERT INTO categorias_hotel
+(id_categoria, nome, descricao, quantidade_estrelas)
+VALUES
+(1, 'Econômica', 'Categoria acessível para clientes que buscam conforto com valor acessível.', 2),
+(2, 'Conforto', 'Categoria com bom conforto e estrutura básica para estadias curtas e médias.', 3),
+(3, 'Executiva', 'Categoria para clientes que buscam qualidade, atendimento e conforto premium.', 4),
+(4, 'Premium', 'Categoria de alto padrão com infraestrutura e serviços diferenciados.', 5);
 INSERT INTO hoteis
 (nome, cnpj, telefone, email, cep, rua, numero,
 bairro, cidade, estado, id_categoria)
@@ -353,3 +360,9 @@ SELECT
     valor_total
 FROM checkout
 ORDER BY id_checkout;
+
+UPDATE usuarios
+SET senha = '123456'
+WHERE status = 'ATIVO';
+
+
