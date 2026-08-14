@@ -1,38 +1,55 @@
-from flask import Flask, jsonify, request,redirect, url_for, render_template, session, flash 
+from flask import Flask, jsonify, request, redirect, url_for, render_template, session, flash
 import mysql.connector
 
 app = Flask(__name__)
 
+app.secret_key = "chave-secreta-arapua-hoteis"
+
+# ==========================================================
+# CONFIGURAÇÃO DO BANCO DE DADOS
+# ==========================================================
+
 db_config = {
-    "host": "DB_HOST",
-    "user": "DB_USER",
-    "password": "DB_PASSWORD",
-    "database": "DB_NAME"
+    "host": "localhost",
+    "user": "root",
+    "password": "0000",
+    "database": "Arapua_Hoteis",
+    "port": 3306
 }
 
+
+# ==========================================================
+# CONEXÃO COM O BANCO
+# ==========================================================
+
 def conectar_banco():
+
     try:
+
         conexao = mysql.connector.connect(**db_config)
 
         if conexao.is_connected():
+
             print("Conexão com o banco realizada com sucesso!")
 
         return conexao
 
     except mysql.connector.Error as erro:
+
         print(f"Erro ao conectar ao banco: {erro}")
+
         return None
 
 @app.route("/")
 def inicio():
 
-    if "id_usuario" in session:
-
+    if "usuario_id" in session:
         return redirect(url_for("dashboard"))
 
     return redirect(url_for("login"))
 
-#################### ROTA 2 - LOGIN##################
+
+#################### ROTA - LOGIN ####################
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -40,15 +57,12 @@ def login():
     if request.method == "POST":
 
         email = request.form.get("email")
-
         senha = request.form.get("senha")
 
         conexao = conectar_banco()
 
-        if not conexao:
-
-            flash("Erro ao conectar ao banco de dados.", "danger")
-
+        if conexao is None:
+            flash("Não foi possível conectar ao banco de dados.")
             return render_template("login.html")
 
         cursor = conexao.cursor(dictionary=True)
@@ -56,96 +70,425 @@ def login():
         try:
 
             cursor.execute("""
-
-                SELECT
-
-                    id_usuario,
-
-                    nome,
-
-                    email,
-
-                    senha,
-
-                    perfil,
-
-                    id_hotel,
-
-                    status
-
+                SELECT *
                 FROM usuarios
-
                 WHERE email = %s
-
+                AND senha = %s
                 LIMIT 1
-
-            """, (email,))
+            """, (email, senha))
 
             usuario = cursor.fetchone()
 
-            if not usuario:
+            if usuario:
 
-                flash("E-mail ou senha incorretos.", "danger")
+                # SALVA OS DADOS NA SESSÃO
+                session["usuario_id"] = usuario["id_usuario"]
+                session["nome"] = usuario["nome"]
+                session["email"] = usuario["email"]
+                session["perfil"] = usuario["perfil"]
+                session["id_hotel"] = usuario.get("id_hotel")
 
+                print("LOGIN REALIZADO COM SUCESSO")
+                print("Usuário:", session["nome"])
+
+                # REDIRECIONA PARA O DASHBOARD
+                return redirect(url_for("dashboard"))
+
+            else:
+
+                flash("E-mail ou senha incorretos.")
                 return render_template("login.html")
-
-            if usuario["status"] != "ATIVO":
-
-                flash("Este usuário está inativo.", "warning")
-
-                return render_template("login.html")
-
-            if usuario["senha"] != senha:
-
-                flash("E-mail ou senha incorretos.", "danger")
-
-                return render_template("login.html")
-
-
-            session["id_usuario"] = usuario["id_usuario"]
-
-            session["nome"] = usuario["nome"]
-
-            session["email"] = usuario["email"]
-
-            session["perfil"] = usuario["perfil"]
-
-            session["id_hotel"] = usuario["id_hotel"]
-
-            return redirect(url_for("dashboard"))
 
         except mysql.connector.Error as erro:
 
-            print(f"Erro no login: {erro}")
+            print("Erro no login:", erro)
 
-            flash("Erro ao realizar login.", "danger")
-
+            flash("Erro ao realizar login.")
             return render_template("login.html")
 
         finally:
 
             cursor.close()
-
             conexao.close()
 
     return render_template("login.html")
 
+
+
+# Rota Dashboard — Arapuã Hotéis
 @app.route("/dashboard")
 def dashboard():
 
-    if "id_usuario" not in session:
+    # ==========================================================
+    # VERIFICA SE O USUÁRIO ESTÁ LOGADO
+    # ==========================================================
 
+    if "usuario_id" not in session:
         return redirect(url_for("login"))
 
-    return f"""
 
-        <h1>Bem-vindo, {session["nome"]}!</h1>
+    # ==========================================================
+    # CONECTA AO BANCO
+    # ==========================================================
 
-        <p>Perfil: {session["perfil"]}</p>
+    conexao = conectar_banco()
 
-        <p>ID Hotel: {session["id_hotel"]}</p>
+    if not conexao:
+        return "Erro ao conectar ao banco de dados."
 
-    """
+
+    cursor = conexao.cursor(dictionary=True)
+
+
+    try:
+
+        # ======================================================
+        # TOTAL DE HOTÉIS ATIVOS
+        # ======================================================
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM hoteis
+            WHERE status = 'ATIVO'
+        """)
+
+        resultado = cursor.fetchone()
+
+        total_hoteis = resultado["total"] if resultado else 0
+
+
+        # ======================================================
+        # TOTAL DE QUARTOS
+        # ======================================================
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM quartos
+            WHERE status <> 'MANUTENCAO'
+        """)
+
+        resultado = cursor.fetchone()
+
+        total_quartos = resultado["total"] if resultado else 0
+
+
+        # ======================================================
+        # TOTAL DE HÓSPEDES
+        # ======================================================
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM hospedes
+        """)
+
+        resultado = cursor.fetchone()
+
+        total_hospedes = resultado["total"] if resultado else 0
+
+
+        # ======================================================
+        # TOTAL DE RESERVAS
+        # ======================================================
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM reservas
+        """)
+
+        resultado = cursor.fetchone()
+
+        total_reservas = resultado["total"] if resultado else 0
+
+
+        # ======================================================
+        # RESERVAS PENDENTES
+        # ======================================================
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM reservas
+            WHERE status = 'PENDENTE'
+        """)
+
+        resultado = cursor.fetchone()
+
+        reservas_pendentes = resultado["total"] if resultado else 0
+
+
+        # ======================================================
+        # RESERVAS CONFIRMADAS
+        # ======================================================
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM reservas
+            WHERE status = 'CONFIRMADA'
+        """)
+
+        resultado = cursor.fetchone()
+
+        reservas_confirmadas = resultado["total"] if resultado else 0
+
+
+        # ======================================================
+        # RESERVAS RECENTES
+        # ======================================================
+
+        cursor.execute("""
+            SELECT
+                r.id_reserva,
+                r.codigo_reserva,
+                r.checkin_previsto,
+                r.checkout_previsto,
+                r.status,
+
+                h.nome AS nome_hospede,
+
+                q.numero AS numero_quarto,
+
+                ht.nome AS nome_hotel
+
+            FROM reservas r
+
+            INNER JOIN hospedes h
+                ON r.id_hospede = h.id_hospede
+
+            INNER JOIN quartos q
+                ON r.id_quarto = q.id_quarto
+
+            INNER JOIN hoteis ht
+                ON q.id_hotel = ht.id_hotel
+
+            ORDER BY r.data_reserva DESC
+
+            LIMIT 5
+        """)
+
+        reservas_recentes = cursor.fetchall()
+
+
+        # ======================================================
+        # CHECK-INS DE HOJE
+        # ======================================================
+
+        checkins_hoje = 0
+
+        try:
+
+            cursor.execute("""
+                SELECT COUNT(*) AS total
+                FROM checkin
+                WHERE DATE(data_checkin) = CURDATE()
+            """)
+
+            resultado = cursor.fetchone()
+
+            checkins_hoje = resultado["total"] if resultado else 0
+
+        except mysql.connector.Error:
+
+            checkins_hoje = 0
+
+
+        # ======================================================
+        # CHECK-OUTS DE HOJE
+        # ======================================================
+
+        checkouts_hoje = 0
+
+        try:
+
+            cursor.execute("""
+                SELECT COUNT(*) AS total
+                FROM checkout
+                WHERE DATE(data_checkout) = CURDATE()
+            """)
+
+            resultado = cursor.fetchone()
+
+            checkouts_hoje = resultado["total"] if resultado else 0
+
+        except mysql.connector.Error:
+
+            checkouts_hoje = 0
+
+
+        # ======================================================
+        # QUARTOS OCUPADOS
+        # ======================================================
+
+        quartos_ocupados = 0
+
+        try:
+
+            cursor.execute("""
+                SELECT COUNT(*) AS total
+                FROM quartos
+                WHERE status = 'OCUPADO'
+            """)
+
+            resultado = cursor.fetchone()
+
+            quartos_ocupados = resultado["total"] if resultado else 0
+
+        except mysql.connector.Error:
+
+            quartos_ocupados = 0
+
+
+        # ======================================================
+        # QUARTOS DISPONÍVEIS
+        # ======================================================
+
+        quartos_disponiveis = total_quartos - quartos_ocupados
+
+        if quartos_disponiveis < 0:
+            quartos_disponiveis = 0
+
+
+        # ======================================================
+        # PORCENTAGEM DE OCUPAÇÃO
+        # ======================================================
+
+        if total_quartos > 0:
+
+            ocupacao = round(
+                (quartos_ocupados / total_quartos) * 100
+            )
+
+        else:
+
+            ocupacao = 0
+
+
+        # ======================================================
+        # FATURAMENTO DO DIA
+        # ======================================================
+
+        faturamento_hoje = 0
+
+        try:
+
+            cursor.execute("""
+                SELECT COALESCE(SUM(valor), 0) AS total
+                FROM pagamentos
+                WHERE DATE(data_pagamento) = CURDATE()
+            """)
+
+            resultado = cursor.fetchone()
+
+            faturamento_hoje = resultado["total"] if resultado else 0
+
+        except mysql.connector.Error:
+
+            faturamento_hoje = 0
+
+
+        # ======================================================
+        # FORMATA FATURAMENTO
+        # ======================================================
+
+        try:
+
+            faturamento_formatado = (
+                f"{float(faturamento_hoje):,.2f}"
+                .replace(",", "X")
+                .replace(".", ",")
+                .replace("X", ".")
+            )
+
+        except (ValueError, TypeError):
+
+            faturamento_formatado = "0,00"
+
+
+        # ======================================================
+        # INFORMAÇÕES DO USUÁRIO
+        # ======================================================
+
+        nome = session.get(
+            "nome",
+            "Usuário"
+        )
+
+        perfil = session.get(
+            "perfil",
+            "Não informado"
+        )
+
+        id_hotel = session.get(
+            "id_hotel"
+        )
+
+
+        # ======================================================
+        # ENVIA OS DADOS PARA O HTML
+        # ======================================================
+
+        return render_template(
+            "dashboard.html",
+
+            nome=nome,
+
+            perfil=perfil,
+
+            id_hotel=id_hotel,
+
+            total_hoteis=total_hoteis,
+
+            total_quartos=total_quartos,
+
+            total_hospedes=total_hospedes,
+
+            total_reservas=total_reservas,
+
+            reservas_pendentes=reservas_pendentes,
+
+            reservas_confirmadas=reservas_confirmadas,
+
+            reservas_recentes=reservas_recentes,
+
+            checkins_hoje=checkins_hoje,
+
+            checkouts_hoje=checkouts_hoje,
+
+            quartos_ocupados=quartos_ocupados,
+
+            quartos_disponiveis=quartos_disponiveis,
+
+            ocupacao=ocupacao,
+
+            faturamento_hoje=faturamento_formatado
+        )
+
+
+    except mysql.connector.Error as erro:
+
+        print(
+            f"Erro ao carregar dashboard: {erro}"
+        )
+
+        return (
+            f"Erro ao carregar dashboard: {erro}"
+        )
+
+
+    except Exception as erro:
+
+        print(
+            f"Erro inesperado no dashboard: {erro}"
+        )
+
+        return (
+            f"Erro inesperado no dashboard: {erro}"
+        )
+
+
+    finally:
+
+        cursor.close()
+
+        conexao.close()
 
 @app.route("/logout")
 def logout():
@@ -154,96 +497,6 @@ def logout():
 
     return redirect(url_for("login"))
 
-@app.route("/dash")
-def dash():
-
-    if "id_usuario" not in session:
-        return redirect(url_for("login"))
-    
-    conexao = conectar_banco()
-
-    if not conexao:
-        return "Erro ao conectar ao banco de dados."
-
-    cursor = conexao.cursor(dictionary=True)
-
-    try:
-        cursor.execute("""
-            SELECT COUNT(*) AS total
-            FROM hoteis
-            WHERE status = 'ATIVO'
-        """)
-
-        total_hoteis = cursor.fetchone()["total"]
-
-        cursor.execute("""
-            SELECT COUNT(*) AS total
-            FROM quartos
-            WHERE status <> 'MANUTENCAO'
-        """)
-
-        total_quartos = cursor.fetchone()["total"]
-
-        cursor.execute("""
-            SELECT COUNT(*) AS total
-            FROM hospedes
-        """)
-
-        total_hospedes = cursor.fetchone()["total"]
-
-        cursor.execute("""
-            SELECT COUNT(*) AS total
-            FROM reservas
-            WHERE status = 'PENDENTE'
-        """)
-        reservas_pendentes = cursor.fetchone()["total"]
-
-        cursor.execute("""
-            SELECT COUNT(*) AS total
-            FROM reservas
-            WHERE status = 'CONFIRMADA'
-        """)
-
-        reservas_confirmadas = cursor.fetchone()["total"]
-
-
-        return f"""
-            <h1>Dashboard - Arapuá Hotéis</h1>
-
-            <h2>Bem-vindo, {session["nome"]}!</h2>
-
-            <p>Perfil: {session["perfil"]}</p>
-
-            <hr>
-
-            <p>Hotéis ativos: {total_hoteis}</p>
-
-            <p>Quartos disponíveis no sistema: {total_quartos}</p>
-
-            <p>Hóspedes cadastrados: {total_hospedes}</p>
-
-            <p>Reservas pendentes: {reservas_pendentes}</p>
-
-            <p>Reservas confirmadas: {reservas_confirmadas}</p>
-
-            <hr>
-
-            <a href="/logout">Sair</a>
-        """
-
-    except mysql.connector.Error as erro:
-
-        print(f"Erro ao carregar dashboard: {erro}")
-
-        return "Erro ao carregar dashboard."
-
-    finally:
-
-        cursor.close()
-        conexao.close()
-
-
- # ============================================================
 
 ################### CRUD - HOTEIS ############
 
