@@ -1,43 +1,46 @@
-from flask import Flask, jsonify, request, redirect, url_for, render_template, session, flash
+from flask import Flask, jsonify, request, redirect, url_for, render_template, session, flash 
 import mysql.connector, os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
 app.secret_key = "chave-secreta-arapua-hoteis"
 
-# ==========================================================
+# Carrega as credenciais antes de montar a configuração do banco.
+load_dotenv("env")
+
+# ==========================================================ws
 # CONFIGURAÇÃO DO BANCO DE DADOS
 # ==========================================================
 
 db_config = {
-    "host": "localhost",
-    "user": "root",
-    "password": "0000",
-    "database": "Arapua_Hoteis",
-    "port": 3306
+    "host":  os.getenv('DB_HOST'),
+    "port":  int(os.getenv('DB_PORT', '3306')),
+    "user":   os.getenv('DB_USER'),
+    "password":   os.getenv('DB_PASSWORD'),
+    "database":   os.getenv('DB_NAME'),
+    "auth_plugin": "mysql_native_password",
 }
 
 
 # ==========================================================
 # CONEXÃO COM O BANCO
 # ==========================================================
-
 def conectar_banco():
-
     try:
+        print("Tentando conectar ao MySQL...")
 
         conexao = mysql.connector.connect(**db_config)
 
+        print("Conexão criada:", conexao)
+
         if conexao.is_connected():
+            return conexao
 
-            print("Conexão com o banco realizada com sucesso!")
+        print("MySQL não está conectado.")
+        return None
 
-        return conexao
-
-    except mysql.connector.Error as erro:
-
-        print(f"Erro ao conectar ao banco: {erro}")
-
+    except Exception as erro:
         return None
 
 @app.route("/")
@@ -56,60 +59,69 @@ def login():
 
     if request.method == "POST":
 
-        email = request.form.get("email")
-        senha = request.form.get("senha")
+        email = request.form.get("email", "").strip()
+        senha = request.form.get("senha", "").strip()
 
         conexao = conectar_banco()
 
         if conexao is None:
-            flash("Não foi possível conectar ao banco de dados.")
-            return render_template("login.html")
-
-        cursor = conexao.cursor(dictionary=True)
+            flash("Erro ao conectar ao banco de dados.", "danger")
+            return redirect(url_for("login"))
 
         try:
 
-            cursor.execute("""
-                SELECT *
+            cursor = conexao.cursor(dictionary=True)
+
+            sql = """
+                SELECT
+                    id_usuario,
+                    nome,
+                    email,
+                    senha,
+                    perfil,
+                    id_hotel
                 FROM usuarios
                 WHERE email = %s
                 AND senha = %s
-                LIMIT 1
-            """, (email, senha))
+            """
+
+            cursor.execute(sql, (email, senha))
 
             usuario = cursor.fetchone()
 
             if usuario:
 
-                # SALVA OS DADOS NA SESSÃO
                 session["usuario_id"] = usuario["id_usuario"]
                 session["nome"] = usuario["nome"]
                 session["email"] = usuario["email"]
                 session["perfil"] = usuario["perfil"]
-                session["id_hotel"] = usuario.get("id_hotel")
+                session["id_hotel"] = usuario["id_hotel"]
 
-                print("LOGIN REALIZADO COM SUCESSO")
-                print("Usuário:", session["nome"])
+                print("LOGIN REALIZADO:", usuario["nome"])
 
-                # REDIRECIONA PARA O DASHBOARD
                 return redirect(url_for("dashboard"))
 
             else:
 
-                flash("E-mail ou senha incorretos.")
-                return render_template("login.html")
+                print("USUÁRIO NÃO ENCONTRADO")
+
+                flash("E-mail ou senha incorretos.", "danger")
+
+                return redirect(url_for("login"))
 
         except mysql.connector.Error as erro:
 
-            print("Erro no login:", erro)
+            print("ERRO NA CONSULTA DO LOGIN:")
+            print(erro)
 
-            flash("Erro ao realizar login.")
-            return render_template("login.html")
+            flash("Erro ao consultar o banco de dados.", "danger")
+
+            return redirect(url_for("login"))
 
         finally:
 
-            cursor.close()
-            conexao.close()
+            if conexao:
+                conexao.close()
 
     return render_template("login.html")
 
@@ -119,19 +131,15 @@ def login():
 @app.route("/dashboard")
 def dashboard():
 
-
     if "usuario_id" not in session:
         return redirect(url_for("login"))
-
 
     conexao = conectar_banco()
 
     if not conexao:
         return "Erro ao conectar ao banco de dados."
 
-
     cursor = conexao.cursor(dictionary=True)
-
 
     try:
 
@@ -140,9 +148,7 @@ def dashboard():
             FROM hoteis
             WHERE status = 'ATIVO'
         """)
-
         resultado = cursor.fetchone()
-
         total_hoteis = resultado["total"] if resultado else 0
 
         cursor.execute("""
@@ -150,27 +156,21 @@ def dashboard():
             FROM quartos
             WHERE status <> 'MANUTENCAO'
         """)
-
         resultado = cursor.fetchone()
-
         total_quartos = resultado["total"] if resultado else 0
 
         cursor.execute("""
             SELECT COUNT(*) AS total
             FROM hospedes
         """)
-
         resultado = cursor.fetchone()
-
         total_hospedes = resultado["total"] if resultado else 0
 
         cursor.execute("""
             SELECT COUNT(*) AS total
             FROM reservas
         """)
-
         resultado = cursor.fetchone()
-
         total_reservas = resultado["total"] if resultado else 0
 
         cursor.execute("""
@@ -178,9 +178,7 @@ def dashboard():
             FROM reservas
             WHERE status = 'PENDENTE'
         """)
-
         resultado = cursor.fetchone()
-
         reservas_pendentes = resultado["total"] if resultado else 0
 
         cursor.execute("""
@@ -188,9 +186,7 @@ def dashboard():
             FROM reservas
             WHERE status = 'CONFIRMADA'
         """)
-
         resultado = cursor.fetchone()
-
         reservas_confirmadas = resultado["total"] if resultado else 0
 
         cursor.execute("""
@@ -200,85 +196,71 @@ def dashboard():
                 r.checkin_previsto,
                 r.checkout_previsto,
                 r.status,
-
                 h.nome AS nome_hospede,
-
                 q.numero AS numero_quarto,
-
                 ht.nome AS nome_hotel
-
             FROM reservas r
-
             INNER JOIN hospedes h
                 ON r.id_hospede = h.id_hospede
-
             INNER JOIN quartos q
                 ON r.id_quarto = q.id_quarto
-
             INNER JOIN hoteis ht
                 ON q.id_hotel = ht.id_hotel
-
             ORDER BY r.data_reserva DESC
-
             LIMIT 5
         """)
 
         reservas_recentes = cursor.fetchall()
 
-        checkins_hoje = 0
+        cursor.execute("""
+            SELECT
+                r.id_reserva,
+                r.codigo_reserva,
+                r.checkin_previsto,
+                r.checkout_previsto,
+                r.status,
+                h.nome AS nome_hospede,
+                q.numero AS numero_quarto,
+                ht.nome AS nome_hotel
+            FROM reservas r
+            INNER JOIN hospedes h
+                ON r.id_hospede = h.id_hospede
+            INNER JOIN quartos q
+                ON r.id_quarto = q.id_quarto
+            INNER JOIN hoteis ht
+                ON q.id_hotel = ht.id_hotel
+            WHERE DATE(r.checkin_previsto)
+                  BETWEEN CURDATE()
+                  AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+            ORDER BY r.checkin_previsto ASC
+            LIMIT 7
+        """)
 
-        try:
+        reservas_proximas_7_dias = cursor.fetchall()
 
-            cursor.execute("""
-                SELECT COUNT(*) AS total
-                FROM checkin
-                WHERE DATE(data_checkin) = CURDATE()
-            """)
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM reservas
+            WHERE DATE(checkin_previsto) = CURDATE()
+        """)
+        resultado = cursor.fetchone()
+        checkins_hoje = resultado["total"] if resultado else 0
 
-            resultado = cursor.fetchone()
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM reservas
+            WHERE DATE(checkout_previsto) = CURDATE()
+        """)
+        resultado = cursor.fetchone()
+        checkouts_hoje = resultado["total"] if resultado else 0
 
-            checkins_hoje = resultado["total"] if resultado else 0
-
-        except mysql.connector.Error:
-
-            checkins_hoje = 0
-
-
-        checkouts_hoje = 0
-
-        try:
-
-            cursor.execute("""
-                SELECT COUNT(*) AS total
-                FROM checkout
-                WHERE DATE(data_checkout) = CURDATE()
-            """)
-
-            resultado = cursor.fetchone()
-
-            checkouts_hoje = resultado["total"] if resultado else 0
-
-        except mysql.connector.Error:
-
-            checkouts_hoje = 0
-
-        quartos_ocupados = 0
-
-        try:
-
-            cursor.execute("""
-                SELECT COUNT(*) AS total
-                FROM quartos
-                WHERE status = 'OCUPADO'
-            """)
-
-            resultado = cursor.fetchone()
-
-            quartos_ocupados = resultado["total"] if resultado else 0
-
-        except mysql.connector.Error:
-
-            quartos_ocupados = 0
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM quartos
+            WHERE status = 'OCUPADO'
+        """)
+        resultado = cursor.fetchone()
+        quartos_ocupados = resultado["total"] if resultado else 0
 
         quartos_disponiveis = total_quartos - quartos_ocupados
 
@@ -286,127 +268,97 @@ def dashboard():
             quartos_disponiveis = 0
 
         if total_quartos > 0:
-
             ocupacao = round(
                 (quartos_ocupados / total_quartos) * 100
             )
-
         else:
-
             ocupacao = 0
-        
 
-        faturamento_hoje = 0
-
-        try:
-
-            cursor.execute("""
-                SELECT COALESCE(SUM(valor), 0) AS total
-                FROM pagamentos
-                WHERE DATE(data_pagamento) = CURDATE()
-            """)
-
-            resultado = cursor.fetchone()
-
-            faturamento_hoje = resultado["total"] if resultado else 0
-
-        except mysql.connector.Error:
-
-            faturamento_hoje = 0
-
+        cursor.execute("""
+            SELECT COALESCE(SUM(valor), 0) AS total
+            FROM pagamentos
+            WHERE status = 'PAGO'
+              AND data_pagamento IS NOT NULL
+              AND DATE(data_pagamento) = CURDATE()
+        """)
+        resultado = cursor.fetchone()
+        faturamento_hoje = resultado["total"] if resultado else 0
 
         try:
-
             faturamento_formatado = (
                 f"{float(faturamento_hoje):,.2f}"
                 .replace(",", "X")
                 .replace(".", ",")
                 .replace("X", ".")
             )
-
         except (ValueError, TypeError):
-
             faturamento_formatado = "0,00"
 
+        cursor.execute("""
+            SELECT COALESCE(SUM(valor), 0) AS total
+            FROM pagamentos
+            WHERE status = 'PAGO'
+              AND data_pagamento IS NOT NULL
+              AND DATE(data_pagamento)
+                  BETWEEN CURDATE()
+                  AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+        """)
+        resultado = cursor.fetchone()
+        faturamento_7_dias = resultado["total"] if resultado else 0
 
-        nome = session.get(
-            "nome",
-            "Usuário"
-        )
+        try:
+            faturamento_7_dias_formatado = (
+                f"{float(faturamento_7_dias):,.2f}"
+                .replace(",", "X")
+                .replace(".", ",")
+                .replace("X", ".")
+            )
+        except (ValueError, TypeError):
+            faturamento_7_dias_formatado = "0,00"
 
-        perfil = session.get(
-            "perfil",
-            "Não informado"
-        )
-
-        id_hotel = session.get(
-            "id_hotel"
-        )
+        nome = session.get("nome", "Usuário")
+        perfil = session.get("perfil", "Não informado")
+        id_hotel = session.get("id_hotel")
 
         return render_template(
             "dashboard.html",
-
             nome=nome,
-
             perfil=perfil,
-
             id_hotel=id_hotel,
-
             total_hoteis=total_hoteis,
-
             total_quartos=total_quartos,
-
             total_hospedes=total_hospedes,
-
             total_reservas=total_reservas,
-
             reservas_pendentes=reservas_pendentes,
-
             reservas_confirmadas=reservas_confirmadas,
-
             reservas_recentes=reservas_recentes,
-
+            reservas_proximas_7_dias=reservas_proximas_7_dias,
             checkins_hoje=checkins_hoje,
-
             checkouts_hoje=checkouts_hoje,
-
             quartos_ocupados=quartos_ocupados,
-
             quartos_disponiveis=quartos_disponiveis,
-
             ocupacao=ocupacao,
-
-            faturamento_hoje=faturamento_formatado
+            faturamento_hoje=faturamento_formatado,
+            faturamento_7_dias=faturamento_7_dias_formatado
         )
-
 
     except mysql.connector.Error as erro:
 
-        print(
-            f"Erro ao carregar dashboard: {erro}"
-        )
+        print(f"Erro ao carregar dashboard: {erro}")
 
-        return (
-            f"Erro ao carregar dashboard: {erro}"
-        )
-
+        return f"Erro ao carregar dashboard: {erro}"
 
     except Exception as erro:
 
-        print(
-            f"Erro inesperado no dashboard: {erro}"
-        )
+        print(f"Erro inesperado no dashboard: {erro}")
 
-        return (
-            f"Erro inesperado no dashboard: {erro}"
-        )
-
+        return f"Erro inesperado no dashboard: {erro}"
 
     finally:
 
         cursor.close()
-
         conexao.close()
+
 
 @app.route("/logout")
 def logout():
@@ -414,7 +366,6 @@ def logout():
     session.clear()
 
     return redirect(url_for("login"))
-
 
 ################### CRUD - HOTEIS ############
 
@@ -1846,9 +1797,7 @@ def delete_reserva(id_reserva):
 
 ####### CRUD - RESERVAS ###########
 
-
 ######## CRUD - CHECK-IN  ###########
-
 @app.route("/checkins", methods=["GET"])
 def get_checkins():
 
@@ -4408,18 +4357,29 @@ def put_usuario(id_usuario):
     dados = request.get_json()
 
     if not dados:
-        return jsonify({"erro": "Nenhum dado foi enviado."}), 400
+        return jsonify({
+            "erro": "Nenhum dado foi enviado."
+        }), 400
 
     nome = dados.get("nome")
     email = dados.get("email")
     senha = dados.get("senha")
     perfil = dados.get("perfil")
     id_hotel = dados.get("id_hotel")
-    status = dados.get("status")
 
-    if not nome or not email:
+    if not nome:
         return jsonify({
-            "erro": "Nome e e-mail são obrigatórios."
+            "erro": "O nome é obrigatório."
+        }), 400
+
+    if not email:
+        return jsonify({
+            "erro": "O e-mail é obrigatório."
+        }), 400
+
+    if not perfil:
+        return jsonify({
+            "erro": "O perfil é obrigatório."
         }), 400
 
     if perfil not in ["ADMIN", "GERENTE", "RECEPCAO"]:
@@ -4427,16 +4387,18 @@ def put_usuario(id_usuario):
             "erro": "Perfil inválido."
         }), 400
 
-    if status not in ["ATIVO", "INATIVO"]:
-        return jsonify({
-            "erro": "Status inválido."
-        }), 400
-
     conexao = conectar_banco()
+
+    if conexao is None:
+        return jsonify({
+            "erro": "Não foi possível conectar ao banco de dados."
+        }), 500
+
     cursor = conexao.cursor()
 
     try:
 
+        # Verifica se o usuário existe
         cursor.execute("""
             SELECT id_usuario
             FROM usuarios
@@ -4448,6 +4410,20 @@ def put_usuario(id_usuario):
                 "erro": "Usuário não encontrado."
             }), 404
 
+        # Verifica se o e-mail já pertence a outro usuário
+        cursor.execute("""
+            SELECT id_usuario
+            FROM usuarios
+            WHERE email = %s
+            AND id_usuario <> %s
+        """, (email, id_usuario))
+
+        if cursor.fetchone():
+            return jsonify({
+                "erro": "Este e-mail já está cadastrado."
+            }), 409
+
+        # Se enviou senha, atualiza a senha
         if senha:
 
             cursor.execute("""
@@ -4457,8 +4433,7 @@ def put_usuario(id_usuario):
                     email = %s,
                     senha = %s,
                     perfil = %s,
-                    id_hotel = %s,
-                    status = %s
+                    id_hotel = %s
                 WHERE id_usuario = %s
             """, (
                 nome,
@@ -4466,7 +4441,6 @@ def put_usuario(id_usuario):
                 senha,
                 perfil,
                 id_hotel,
-                status,
                 id_usuario
             ))
 
@@ -4478,34 +4452,35 @@ def put_usuario(id_usuario):
                     nome = %s,
                     email = %s,
                     perfil = %s,
-                    id_hotel = %s,
-                    status = %s
+                    id_hotel = %s
                 WHERE id_usuario = %s
             """, (
                 nome,
                 email,
                 perfil,
                 id_hotel,
-                status,
                 id_usuario
             ))
 
         conexao.commit()
 
         return jsonify({
-            "mensagem": "Usuário atualizado com sucesso."
+            "mensagem": "Usuário atualizado com sucesso.",
+            "id_usuario": id_usuario
         }), 200
 
     except mysql.connector.Error as erro:
 
         conexao.rollback()
 
-        return jsonify({"erro": str(erro)}), 500
+        return jsonify({
+            "erro": str(erro)
+        }), 500
 
     finally:
+
         cursor.close()
         conexao.close()
-
 @app.route("/usuarios/<int:id_usuario>", methods=["DELETE"])
 def delete_usuario(id_usuario):
 
@@ -4548,5 +4523,57 @@ def delete_usuario(id_usuario):
 
 ######## CRUD - USUÁRIOS ###############
 
+###### ROTA HOTEL
+@app.route("/hoteis")
+def hoteis():
+
+    if "usuario_id" not in session:
+        return redirect(url_for("login"))
+
+    conexao = conectar_banco()
+
+    if not conexao:
+        return "Erro ao conectar ao banco de dados."
+
+    cursor = conexao.cursor(dictionary=True)
+
+    try:
+
+        cursor.execute("""
+            SELECT
+                id_hotel,
+                nome,
+                endereco,
+                cidade,
+                estado,
+                telefone,
+                email,
+                status
+            FROM hoteis
+            ORDER BY nome
+        """)
+
+        hoteis = cursor.fetchall()
+
+        return render_template(
+            "hoteis.html",
+            nome=session.get("nome", "Usuário"),
+            perfil=session.get("perfil", "Não informado"),
+            id_hotel=session.get("id_hotel"),
+            hoteis=hoteis
+        )
+
+    except mysql.connector.Error as erro:
+
+        print(f"Erro ao carregar hotéis: {erro}")
+
+        return f"Erro ao carregar hotéis: {erro}"
+
+    finally:
+
+        cursor.close()
+        conexao.close()
+
 if __name__ == "__main__":
     app.run(debug=True)
+
