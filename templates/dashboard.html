@@ -32,17 +32,9 @@
 
 <div class="app">
 
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
-
     <aside class="sidebar" id="sidebar">
 
         <div class="logo">
-
-            <div class="logo-symbol">
-                ✦
-            </div>
 
             <div class="logo-text">
                 <strong>ARAPUÁ</strong>
@@ -59,7 +51,7 @@
                 <span>Dashboard</span>
             </a>
 
-            <a href="#" class="menu-item">
+            <a href="/hoteis" class="menu-item">
                 <i class="fa-solid fa-hotel"></i>
                 <span>Hotéis</span>
             </a>
@@ -109,11 +101,6 @@
                 <span>Usuários</span>
             </a>
 
-            <a href="#" class="menu-item">
-                <i class="fa-solid fa-gear"></i>
-                <span>Configurações</span>
-            </a>
-
         </nav>
 
 
@@ -144,65 +131,40 @@
 
             <div class="topbar-left">
 
-                <button
-                    class="mobile-menu"
-                    id="mobileMenu"
-                    type="button"
+                <img
+                src="{{ url_for('static', filename='images/inv.png') }}"
+                alt="Arapuá Hotéis"
+                class="topbar-logo"
                 >
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-
-                <div>
-
-                    <strong>Dashboard</strong>
-
-                    <span>
-                        Visão geral do sistema
-                    </span>
-
-                </div>
 
             </div>
 
-
             <div class="topbar-right">
-
 
                 <div class="user">
 
-                    <div class="avatar">
-                        TS
-                    </div>
+                <div class="avatar">
+                    {{ nome[:2].upper() }}
+                </div>
 
-                    <div class="user-info">
-
-                        <span>Bem-vindo,</span>
-                        <strong>Telê Santana</strong>
-
-                    </div>
+                <div class="user-info">
+                    <span>Bem-vindo,</span>
+                    <strong>{{ nome }}</strong>
+                </div>
 
                     <i class="fa-solid fa-chevron-down user-arrow"></i>
 
                 </div>
 
-
-                <button
-                    class="logout"
-                    id="logoutButton"
-                    type="button"
-                >
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Sair</span>
-                </button>
+                <a href="/logout" class="logout" id="logoutButton">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sair</span>
+                </a>
 
             </div>
 
         </header>
 
-
-        <!-- =====================================================
-             CONTENT
-        ====================================================== -->
 
         <section class="content">
 
@@ -214,7 +176,7 @@
                 <div>
 
                     <h1>
-                        Olá, Telê Santana!
+                        Olá, {{ nome }}!
                     </h1>
 
                     <p>
@@ -224,30 +186,8 @@
                 </div>
 
 
-                <div class="date-box">
-
-                    <i class="fa-regular fa-calendar-days"></i>
-
-                    <div>
-
-                        <strong>
-                            11 de agosto de 2025
-                        </strong>
-
-                        <span>
-                            Segunda-feira
-                        </span>
-
-                    </div>
-
-                </div>
-
             </div>
 
-
-            <!-- =================================================
-                 INDICADORES
-            ================================================== -->
 
             <div class="stats-grid">
 
@@ -261,17 +201,12 @@
                     </div>
 
                     <div class="stat-info">
-
-                        <strong>4</strong>
-
+                        <strong>{{ total_hoteis }}</strong>
                         <span>Hotéis</span>
-
                         <small>Ativos</small>
-
                     </div>
 
                 </div>
-
 
                 <!-- QUARTOS -->
 
@@ -282,13 +217,9 @@
                     </div>
 
                     <div class="stat-info">
-
-                        <strong>127</strong>
-
+                        <strong>{{ total_quartos }}</strong>
                         <span>Quartos</span>
-
                         <small>Cadastrados</small>
-
                     </div>
 
                 </div>
@@ -304,18 +235,14 @@
 
                     <div class="stat-info">
 
-                        <strong>56</strong>
-
+                        <strong>{{ total_reservas }}</strong>
                         <span>Reservas</span>
-
                         <small>Hoje</small>
 
                     </div>
 
                 </div>
 
-
-                <!-- CHECK-IN -->
 
                 <div class="stat-card">
 
@@ -325,16 +252,12 @@
 
                     <div class="stat-info">
 
-                        <strong>28</strong>
-
+                        <strong>{{ checkins_hoje }}</strong>
                         <span>Check-ins</span>
-
                         <small>Hoje</small>
-
                     </div>
 
                 </div>
-
 
                 <!-- CHECK-OUT -->
 
@@ -346,12 +269,9 @@
 
                     <div class="stat-info">
 
-                        <strong>15</strong>
-
+                        <strong>{{checkouts_hoje}}</strong>
                         <span>Check-outs</span>
-
                         <small>Hoje</small>
-
                     </div>
 
                 </div>
@@ -366,382 +286,358 @@
                     </div>
 
                     <div class="stat-info revenue">
-
                         <strong>
-                            R$ 18.650,00
+                            R$ {{ faturamento_hoje }}
                         </strong>
-
                         <span>Faturamento</span>
-
                         <small>Hoje</small>
-
                     </div>
-
                 </div>
 
             </div>
-
-
-            <!-- =================================================
-                 PRIMEIRA LINHA
-            ================================================== -->
 
             <div class="dashboard-grid first-row">
 
+    <!-- GRÁFICO DE OCUPAÇÃO -->
 
-                <!-- OCUPAÇÃO -->
+    <div class="panel occupation-panel">
 
-                <div class="panel occupation-panel">
+            <div class="panel-header">
 
-                    <div class="panel-header">
+                <h2>
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Taxa de ocupação
+                </h2>
 
-                        <h2>
-                            <i class="fa-solid fa-chart-pie"></i>
-                            Taxa de ocupação
-                        </h2>
+                <select id="periodSelect">
 
-                        <select id="periodSelect">
-                            <option>Esta semana</option>
-                            <option>Este mês</option>
-                            <option>Este ano</option>
-                        </select>
+                    <option value="semana">
+                        Esta semana
+                    </option>
 
-                    </div>
+                    <option value="mes">
+                        Este mês
+                    </option>
 
+                    <option value="ano">
+                        Este ano
+                    </option>
 
-                    <div class="occupation-content">
+                </select>
 
-                        <div class="donut">
-
-                            <div class="donut-center">
-
-                                <strong>72%</strong>
-
-                                <span>
-                                    Ocupação média
-                                </span>
-
-                            </div>
-
-                        </div>
+            </div>
 
 
-                        <div class="occupation-info">
+            <div class="occupation-content">
 
-                            <div class="legend-item">
+                <div
+                    class="donut"
+                    style="--ocupacao: {{ ocupacao }}%;"
+                >
 
-                                <span class="legend-dot green-dot"></span>
+                    <div class="donut-center">
 
-                                <div>
+                        <strong>
+                            {{ ocupacao }}%
+                        </strong>
 
-                                    <strong>
-                                        Quartos ocupados
-                                    </strong>
-
-                                    <span>
-                                        91 quartos
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="legend-item">
-
-                                <span class="legend-dot red-dot"></span>
-
-                                <div>
-
-                                    <strong>
-                                        Quartos disponíveis
-                                    </strong>
-
-                                    <span>
-                                        36 quartos
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="total-rooms">
-
-                                <span>
-                                    Total de quartos
-                                </span>
-
-                                <strong>
-                                    127
-                                </strong>
-
-                            </div>
-
-                        </div>
+                        <span>
+                            Ocupação média
+                        </span>
 
                     </div>
 
                 </div>
 
 
-                <!-- RESERVAS -->
+                <div class="occupation-info">
 
-                <div class="panel reservations-panel">
+                    <div class="legend-item">
 
-                    <div class="panel-header">
+                        <span class="legend-dot green-dot"></span>
 
-                        <h2>
-                            <i class="fa-solid fa-calendar-check"></i>
-                            Reservas dos próximos 7 dias
-                        </h2>
-
-                    </div>
-
-
-                    <div class="reservation-list">
-
-
-                        <div class="reservation">
-
-                            <div class="guest-avatar">
-                                JP
-                            </div>
-
-                            <div class="reservation-info">
-
-                                <strong>
-                                    João Pedro Silva
-                                </strong>
-
-                                <span>
-                                    Quarto 101 - Arapuá Palmas
-                                </span>
-
-                            </div>
-
-                            <div class="reservation-date">
-                                12/08/2025
-                            </div>
-
-                            <span class="status confirmed">
-                                Confirmada
-                            </span>
-
-                        </div>
-
-
-                        <div class="reservation">
-
-                            <div class="guest-avatar">
-                                MO
-                            </div>
-
-                            <div class="reservation-info">
-
-                                <strong>
-                                    Maria Oliveira Santos
-                                </strong>
-
-                                <span>
-                                    Quarto 205 - Arapuá Goiânia
-                                </span>
-
-                            </div>
-
-                            <div class="reservation-date">
-                                12/08/2025
-                            </div>
-
-                            <span class="status confirmed">
-                                Confirmada
-                            </span>
-
-                        </div>
-
-
-                        <div class="reservation">
-
-                            <div class="guest-avatar">
-                                CM
-                            </div>
-
-                            <div class="reservation-info">
-
-                                <strong>
-                                    Carlos Mendes
-                                </strong>
-
-                                <span>
-                                    Quarto 302 - Arapuá Brasília
-                                </span>
-
-                            </div>
-
-                            <div class="reservation-date">
-                                13/08/2025
-                            </div>
-
-                            <span class="status pending">
-                                Pendente
-                            </span>
-
-                        </div>
-
-
-                        <div class="reservation">
-
-                            <div class="guest-avatar">
-                                FL
-                            </div>
-
-                            <div class="reservation-info">
-
-                                <strong>
-                                    Fernanda Lima
-                                </strong>
-
-                                <span>
-                                    Quarto 110 - Arapuá Palmas
-                                </span>
-
-                            </div>
-
-                            <div class="reservation-date">
-                                14/08/2025
-                            </div>
-
-                            <span class="status confirmed">
-                                Confirmada
-                            </span>
-
-                        </div>
-
-
-                        <div class="reservation">
-
-                            <div class="guest-avatar">
-                                RA
-                            </div>
-
-                            <div class="reservation-info">
-
-                                <strong>
-                                    Ricardo Almeida
-                                </strong>
-
-                                <span>
-                                    Quarto 203 - Arapuá Goiânia
-                                </span>
-
-                            </div>
-
-                            <div class="reservation-date">
-                                15/08/2025
-                            </div>
-
-                            <span class="status confirmed">
-                                Confirmada
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <button
-                        class="view-all"
-                        id="viewReservations"
-                        type="button"
-                    >
-                        Ver todas as reservas
-                    </button>
-
-                </div>
-
-
-                <!-- MOVIMENTAÇÕES -->
-
-                <div class="panel movements-panel">
-
-                    <div class="panel-header">
-
-                        <h2>
-                            <i class="fa-solid fa-angles-right"></i>
-                            Check-ins e Check-outs de hoje
-                        </h2>
-
-                    </div>
-
-
-                    <div class="movement-box checkin-box">
-
-                        <div class="movement-title">
-
-                            <span>
-                                Check-ins
-                            </span>
+                        <div>
 
                             <strong>
-                                28
+                                Quartos ocupados
                             </strong>
 
-                        </div>
+                            <span>
+                                {{ quartos_ocupados }} quartos
+                            </span>
 
-
-                        <div class="hotel-row">
-                            <span>Arapuá Palmas</span>
-                            <strong>12</strong>
-                        </div>
-
-                        <div class="hotel-row">
-                            <span>Arapuá Goiânia</span>
-                            <strong>9</strong>
-                        </div>
-
-                        <div class="hotel-row">
-                            <span>Arapuá Brasília</span>
-                            <strong>7</strong>
                         </div>
 
                     </div>
 
 
-                    <div class="movement-box checkout-box">
+                    <div class="legend-item">
 
-                        <div class="movement-title">
+                        <span class="legend-dot red-dot"></span>
 
-                            <span>
-                                Check-outs
-                            </span>
+                        <div>
 
                             <strong>
-                                15
+                                Quartos disponíveis
                             </strong>
 
+                            <span>
+                                {{ quartos_disponiveis }} quartos
+                            </span>
+
                         </div>
 
+                    </div>
 
-                        <div class="hotel-row">
-                            <span>Arapuá Palmas</span>
-                            <strong>6</strong>
-                        </div>
 
-                        <div class="hotel-row">
-                            <span>Arapuá Goiânia</span>
-                            <strong>5</strong>
-                        </div>
+                    <div class="total-rooms">
 
-                        <div class="hotel-row">
-                            <span>Arapuá Brasília</span>
-                            <strong>4</strong>
-                        </div>
+                        <span>
+                            Total de quartos
+                        </span>
+
+                        <strong>
+                            {{ total_quartos }}
+                        </strong>
 
                     </div>
 
                 </div>
 
             </div>
+
+        </div>
+
+
+        <!-- RESERVAS DOS PRÓXIMOS 7 DIAS -->
+
+        <div class="panel reservations-panel">
+
+            <div class="panel-header">
+
+                <h2>
+                    <i class="fa-solid fa-calendar-check"></i>
+                    Reservas dos próximos 7 dias
+                </h2>
+
+            </div>
+
+
+            <div class="reservation-list">
+
+                {% if reservas_proximos_7_dias %}
+
+                    {% for reserva in reservas_proximos_7_dias %}
+
+                        <div class="reservation">
+
+                            <div class="guest-avatar">
+
+                                {{ reserva.nome_hospede[:2]|upper }}
+
+                            </div>
+
+
+                            <div class="reservation-info">
+
+                                <strong>
+                                    {{ reserva.nome_hospede }}
+                                </strong>
+
+                                <span>
+                                    Quarto {{ reserva.numero_quarto }}
+                                    - {{ reserva.nome_hotel }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="reservation-date">
+
+                                {% if reserva.checkin_previsto %}
+
+                                    {{ reserva.checkin_previsto.strftime('%d/%m/%Y') }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if reserva.status == 'CONFIRMADA' %}
+
+                                <span class="status confirmed">
+                                    Confirmada
+                                </span>
+
+                            {% elif reserva.status == 'PENDENTE' %}
+
+                                <span class="status pending">
+                                    Pendente
+                                </span>
+
+                            {% else %}
+
+                                <span class="status">
+                                    {{ reserva.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="no-reservations">
+
+                        <i class="fa-solid fa-calendar-xmark"></i>
+
+                        <span>
+                            Nenhuma reserva nos próximos 7 dias.
+                        </span>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <button
+                class="view-all"
+                type="button"
+                onclick="window.location.href='/reservas'"
+            >
+                Ver todas as reservas
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- MOVIMENTAÇÕES -->
+
+    <div class="panel movements-panel">
+
+        <div class="panel-header">
+
+            <h2>
+                <i class="fa-solid fa-angles-right"></i>
+                Check-ins e Check-outs de hoje
+            </h2>
+
+        </div>
+
+
+        <div class="movement-box checkin-box">
+
+            <div class="movement-title">
+
+                <span>
+                    Check-ins
+                </span>
+
+                <strong>
+                    {{ checkins_hoje }}
+                </strong>
+
+            </div>
+
+
+            {% if checkins_por_hotel %}
+
+                {% for hotel in checkins_por_hotel %}
+
+                    <div class="hotel-row">
+
+                        <span>
+                            {{ hotel.nome_hotel }}
+                        </span>
+
+                        <strong>
+                            {{ hotel.total }}
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="hotel-row">
+
+                    <span>
+                        Nenhum check-in hoje
+                    </span>
+
+                    <strong>
+                        0
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="movement-box checkout-box">
+
+            <div class="movement-title">
+
+                <span>
+                    Check-outs
+                </span>
+
+                <strong>
+                    {{ checkouts_hoje }}
+                </strong>
+
+            </div>
+
+
+            {% if checkouts_por_hotel %}
+
+                {% for hotel in checkouts_por_hotel %}
+
+                    <div class="hotel-row">
+
+                        <span>
+                            {{ hotel.nome_hotel }}
+                        </span>
+
+                        <strong>
+                            {{ hotel.total }}
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="hotel-row">
+
+                    <span>
+                        Nenhum check-out hoje
+                    </span>
+
+                    <strong>
+                        0
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
 
 
             <!-- =================================================
@@ -868,101 +764,7 @@
                     </div>
 
                 </div>
-
-
-                <!-- ALERTAS -->
-
-                <div class="panel alerts-panel">
-
-                    <div class="panel-header">
-
-                        <h2>
-                            <i class="fa-solid fa-bell"></i>
-                            Alertas e avisos
-                        </h2>
-
-                    </div>
-
-
-                    <div class="alert-list">
-
-
-                        <div class="alert-item danger">
-
-                            <div class="alert-icon">
-                                <i class="fa-solid fa-circle-exclamation"></i>
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    5 reservas pendentes de confirmação
-                                </strong>
-
-                                <span>
-                                    Aguardando confirmação do pagamento
-                                </span>
-
-                            </div>
-
-                            <i class="fa-solid fa-chevron-right"></i>
-
-                        </div>
-
-
-                        <div class="alert-item warning">
-
-                            <div class="alert-icon">
-                                <i class="fa-solid fa-triangle-exclamation"></i>
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    3 quartos em manutenção
-                                </strong>
-
-                                <span>
-                                    Verifique os quartos e atualize o status
-                                </span>
-
-                            </div>
-
-                            <i class="fa-solid fa-chevron-right"></i>
-
-                        </div>
-
-
-                        <div class="alert-item success">
-
-                            <div class="alert-icon">
-                                <i class="fa-solid fa-circle-check"></i>
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    Backup realizado com sucesso
-                                </strong>
-
-                                <span>
-                                    Último backup: 11/08/2025 03:00
-                                </span>
-
-                            </div>
-
-                            <i class="fa-solid fa-chevron-right"></i>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
             </div>
-
-        </section>
-
     </main>
 
 </div>
