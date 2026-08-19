@@ -6,6 +6,10 @@ COLLATE utf8mb4_unicode_ci;
 
 USE Arapua_Hoteis;
 
+ALTER USER 'root'@'localhost'
+IDENTIFIED WITH mysql_native_password
+BY '0000';
+
 CREATE TABLE categorias_hotel (
     id_categoria INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL UNIQUE,
