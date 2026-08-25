@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-out - Arapuá Hotéis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/checkout.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="logo-area">
+        <div class="logo-icon"><i class="fa-solid fa-hotel"></i></div>
+        <div>
+            <h2>Arapuá</h2>
+            <span>HOTÉIS</span>
+        </div>
+    </div>
+
+    <nav class="menu">
+        <a href="{{ url_for('dashboard') }}">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="{{ url_for('pagina_hoteis') }}">
+            <i class="fa-solid fa-hotel"></i>
+            <span>Hotéis</span>
+        </a>
+        <a href="{{ url_for('pagina_quartos') }}">
+            <i class="fa-solid fa-bed"></i>
+            <span>Quartos</span>
+        </a>
+        <a href="{{ url_for('pagina_hospedes') }}">
+            <i class="fa-solid fa-users"></i>
+            <span>Hóspedes</span>
+        </a>
+        <a href="{{ url_for('pagina_reservas') }}">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Reservas</span>
+        </a>
+        <a href="{{ url_for('pagina_checkin') }}">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Check-in</span>
+        </a>
+        <a href="{{ url_for('pagina_checkout') }}" class="ativo">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Check-out</span>
+        </a>
+    
+        <a href="{{ url_for('pagina_consumos') }}" class="menu-item">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Consumos</span>
+         </a>
+
+        <a href="{{ url_for('pagina_pagamentos') }}">
+            <i class="fa-solid fa-credit-card"></i>
+            <span>Pagamentos</span>
+        </a>
+    
+    </nav>
+
+    <div class="sidebar-bottom">
+        <a href="{{ url_for('logout') }}" class="sair"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sair</span></a>
+    </div>
+</aside>
+
+<main class="conteudo">
+    <header class="topo">
+        <div>
+            <span class="titulo-pequeno">ADMINISTRAÇÃO</span>
+            <h1>Check-out</h1>
+            <p>Gerencie as saídas dos hóspedes.</p>
+        </div>
+        <div class="usuario">
+            <div class="usuario-icone"><i class="fa-solid fa-user"></i></div>
+            <div>
+                <strong>{{ nome }}</strong>
+                <span>{{ perfil }}</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="acoes">
+        <div class="pesquisa">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="pesquisaCheckout" placeholder="Pesquisar hóspede, quarto ou reserva..." autocomplete="off">
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2>Hóspedes em hospedagem</h2>
+                <span>Check-outs disponíveis</span>
+            </div>
+            <div class="total">
+                <span id="totalCheckins">{{ checkins|length }}</span>
+                <small>hóspedes</small>
+            </div>
+        </div>
+
+        <div class="tabela-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reserva</th>
+                        <th>Hóspede</th>
+                        <th>Hotel</th>
+                        <th>Quarto</th>
+                        <th>Check-in</th>
+                        <th>Check-out previsto</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabela">
+                    {% for item in checkins %}
+                    <tr>
+                        <td><strong class="codigo">{{ item.codigo_reserva }}</strong></td>
+                        <td>
+                            <div class="hospede">
+                                <div class="hospede-icone"><i class="fa-solid fa-user"></i></div>
+                                <strong>{{ item.hospede }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ item.hotel or "Não informado" }}</td>
+                        <td><span class="quarto">Quarto {{ item.quarto }}</span></td>
+                        <td>
+                            {% if item.data_checkin %}
+                                {{ item.data_checkin.strftime('%d/%m/%Y %H:%M') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.checkout_previsto %}
+                                {{ item.checkout_previsto.strftime('%d/%m/%Y') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button type="button" class="btn-consumo" data-id="{{ item.id_checkin }}" data-hospede="{{ item.hospede }}" onclick="abrirModalConsumo(this)">
+                                <i class="fa-solid fa-plus"></i>
+                                Consumo
+                            </button>
+                            <button type="button" class="btn-checkout" data-id="{{ item.id_checkin }}" data-hospede="{{ item.hospede }}" data-diarias="{{ item.quantidade_diarias or 1 }}" data-valor-diaria="{{ item.valor_diaria or 0 }}" data-valor-diarias="{{ item.valor_diarias or 0 }}" data-valor-servicos="{{ item.valor_servicos or 0 }}" data-valor-total="{{ item.valor_total or 0 }}" onclick="realizarCheckout(this)">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                Check-out
+                            </button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="sem-registros">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <h3>Nenhum check-out disponível</h3>
+                            <p>Não existem hóspedes aguardando check-out.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card historico">
+        <div class="card-header">
+            <div>
+                <h2>Histórico de Check-outs</h2>
+                <span>Saídas já realizadas</span>
+            </div>
+            <div class="total">
+                {{ checkouts|length }}
+                <small>realizados</small>
+            </div>
+        </div>
+
+        <div class="tabela-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reserva</th>
+                        <th>Hóspede</th>
+                        <th>Hotel</th>
+                        <th>Quarto</th>
+                        <th>Diárias</th>
+                        <th>Serviços</th>
+                        <th>Total</th>
+                        <th>Data do Check-out</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in checkouts %}
+                    <tr>
+                        <td><strong class="codigo">{{ item.codigo_reserva }}</strong></td>
+                        <td>{{ item.hospede }}</td>
+                        <td>{{ item.hotel or "Não informado" }}</td>
+                        <td>Quarto {{ item.quarto }}</td>
+                        <td>R$ {{ "%.2f"|format(item.valor_diarias|float)|replace(".", ",") }}</td>
+                        <td>R$ {{ "%.2f"|format(item.valor_servicos|float)|replace(".", ",") }}</td>
+                        <td><strong class="valor">R$ {{ "%.2f"|format(item.valor_total|float)|replace(".", ",") }}</strong></td>
+                        <td>
+                            {% if item.data_checkout %}
+                                {{ item.data_checkout.strftime('%d/%m/%Y %H:%M') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="sem-registros">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <h3>Nenhum check-out realizado</h3>
+                            <p>O histórico aparecerá aqui.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<div id="modalConsumo" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;width:95%;max-width:520px;border-radius:14px;padding:25px;box-shadow:0 10px 40px rgba(0,0,0,.2);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div>
+                <h2 style="margin:0;color:#173f32;">Adicionar Consumo</h2>
+                <span id="nomeHospedeConsumo" style="color:#718078;"></span>
+            </div>
+            <button type="button" onclick="fecharModalConsumo()" style="border:0;background:none;font-size:22px;color:#777;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label for="servicoConsumo" style="font-weight:600;">Serviço</label>
+            <select id="servicoConsumo" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:7px;margin-top:5px;">
+                <option value="">Selecione um serviço</option>
+                {% for servico in servicos %}
+                <option value="{{ servico.id_servico }}" data-preco="{{ servico.preco }}">
+                    {{ servico.nome }} - R$ {{ "%.2f"|format(servico.preco|float)|replace(".", ",") }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label for="quantidadeConsumo" style="font-weight:600;">Quantidade</label>
+            <input type="number" id="quantidadeConsumo" min="1" value="1" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:7px;margin-top:5px;">
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label for="observacaoConsumo" style="font-weight:600;">Observação</label>
+            <textarea id="observacaoConsumo" rows="3" placeholder="Ex.: 2 águas, 1 refrigerante..." style="width:100%;padding:10px;border:1px solid #ddd;border-radius:7px;margin-top:5px;resize:none;"></textarea>
+        </div>
+
+        <div style="background:#f7f9f8;border:1px solid #e2e8e5;border-radius:10px;padding:15px;margin-bottom:20px;">
+            <div style="display:flex;justify-content:space-between;">
+                <span>Valor unitário</span>
+                <strong id="valorUnitarioConsumo">R$ 0,00</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:10px;">
+                <span>Total</span>
+                <strong id="valorTotalConsumo" style="color:#b72d2d;font-size:20px;">R$ 0,00</strong>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:10px;">
+            <button type="button" onclick="fecharModalConsumo()" style="flex:1;border:0;padding:12px;border-radius:7px;background:#eee;color:#555;">Cancelar</button>
+            <button type="button" id="btnSalvarConsumo" onclick="salvarConsumo()" style="flex:1;border:0;padding:12px;border-radius:7px;background:#b72d2d;color:#fff;">
+                <i class="fa-solid fa-plus"></i>
+                Adicionar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modalCheckout" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;width:95%;max-width:520px;border-radius:14px;padding:25px;box-shadow:0 10px 40px rgba(0,0,0,.2);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div>
+                <h2 style="margin:0;color:#173f32;">Finalizar Check-out</h2>
+                <span id="nomeHospedeModal" style="color:#718078;"></span>
+            </div>
+            <button type="button" onclick="fecharModalCheckout()" style="border:0;background:none;font-size:22px;color:#777;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div style="background:#f7f9f8;border:1px solid #e2e8e5;border-radius:10px;padding:18px;margin-bottom:18px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                <span>Quantidade de diárias</span>
+                <strong id="modalDiarias">0</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                <span>Valor da diária</span>
+                <strong id="modalValorDiaria">R$ 0,00</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                <span>Valor das diárias</span>
+                <strong id="modalValorDiarias">R$ 0,00</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+                <span>Consumo de serviços</span>
+                <strong id="modalValorServicos">R$ 0,00</strong>
+            </div>
+        </div>
+
+        <div style="border-top:1px solid #ddd;padding-top:15px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong style="font-size:18px;">TOTAL A PAGAR</strong>
+                <strong id="modalValorTotal" style="font-size:24px;color:#b72d2d;">R$ 0,00</strong>
+            </div>
+        </div>
+
+        <div style="margin-top:20px;">
+            <label for="descontosCheckout" style="font-weight:600;">Desconto</label>
+            <input type="number" id="descontosCheckout" min="0" step="0.01" value="0" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:7px;margin-top:5px;">
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:22px;">
+            <button type="button" onclick="fecharModalCheckout()" style="flex:1;border:0;padding:12px;border-radius:7px;background:#eee;color:#555;">Cancelar</button>
+            <button type="button" id="btnConfirmarCheckout" onclick="confirmarCheckout()" style="flex:1;border:0;padding:12px;border-radius:7px;background:#b72d2d;color:#fff;">
+                <i class="fa-solid fa-check"></i>
+                Finalizar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let checkinSelecionado = null;
+let valorTotalAtual = 0;
+let checkinConsumoSelecionado = null;
+
+function formatarMoeda(valor) {
+    return "R$ " + Number(valor || 0).toFixed(2).replace(".", ",");
+}
+
+function converterNumero(valor) {
+    if (typeof valor === "string") {
+        valor = valor.replace(",", ".");
+    }
+
+    const numero = Number(valor);
+
+    return Number.isFinite(numero) ? numero : 0;
+}
+
+function abrirModalConsumo(botao) {
+    checkinConsumoSelecionado = botao.dataset.id;
+    document.getElementById("nomeHospedeConsumo").textContent = botao.dataset.hospede;
+    document.getElementById("servicoConsumo").value = "";
+    document.getElementById("quantidadeConsumo").value = "1";
+    document.getElementById("observacaoConsumo").value = "";
+    document.getElementById("valorUnitarioConsumo").textContent = "R$ 0,00";
+    document.getElementById("valorTotalConsumo").textContent = "R$ 0,00";
+    document.getElementById("modalConsumo").style.display = "flex";
+}
+
+function fecharModalConsumo() {
+    document.getElementById("modalConsumo").style.display = "none";
+    checkinConsumoSelecionado = null;
+}
+
+function atualizarValorConsumo() {
+    const select = document.getElementById("servicoConsumo");
+    const opcao = select.options[select.selectedIndex];
+    const preco = converterNumero(opcao.dataset.preco || 0);
+    const quantidade = converterNumero(document.getElementById("quantidadeConsumo").value || 1);
+    const total = preco * quantidade;
+
+    document.getElementById("valorUnitarioConsumo").textContent = formatarMoeda(preco);
+    document.getElementById("valorTotalConsumo").textContent = formatarMoeda(total);
+}
+
+document.getElementById("servicoConsumo").addEventListener("change", atualizarValorConsumo);
+document.getElementById("quantidadeConsumo").addEventListener("input", atualizarValorConsumo);
+
+async function salvarConsumo() {
+    if (!checkinConsumoSelecionado) {
+        alert("Check-in não informado.");
+        return;
+    }
+
+    const idServico = document.getElementById("servicoConsumo").value;
+    const quantidade = converterNumero(document.getElementById("quantidadeConsumo").value || 0);
+    const observacao = document.getElementById("observacaoConsumo").value.trim();
+
+    if (!idServico) {
+        alert("Selecione um serviço.");
+        return;
+    }
+
+    if (quantidade <= 0) {
+        alert("Informe uma quantidade válida.");
+        return;
+    }
+
+    const botao = document.getElementById("btnSalvarConsumo");
+
+    try {
+        botao.disabled = true;
+        botao.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+        const resposta = await fetch("/consumos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({
+                id_checkin: checkinConsumoSelecionado,
+                id_servico: idServico,
+                quantidade: quantidade,
+                observacao: observacao
+            })
+        });
+
+        const texto = await resposta.text();
+        let resultado;
+
+        try {
+            resultado = JSON.parse(texto);
+        } catch (erro) {
+            console.error("Status:", resposta.status);
+            console.error("Resposta:", texto);
+            throw new Error("O servidor não retornou JSON.");
+        }
+
+        if (!resposta.ok) {
+            throw new Error(resultado.erro || "Erro ao adicionar consumo.");
+        }
+
+        alert("Consumo adicionado com sucesso!");
+        fecharModalConsumo();
+        window.location.reload();
+
+    } catch (erro) {
+        console.error("Erro ao adicionar consumo:", erro);
+        alert(erro.message || "Erro ao adicionar consumo.");
+
+        botao.disabled = false;
+        botao.innerHTML = '<i class="fa-solid fa-plus"></i> Adicionar';
+    }
+}
+
+function realizarCheckout(botao) {
+    checkinSelecionado = botao.dataset.id;
+
+    const hospede = botao.dataset.hospede;
+    const diarias = converterNumero(botao.dataset.diarias || 1);
+    const valorDiaria = converterNumero(botao.dataset.valorDiaria || 0);
+    const valorDiarias = converterNumero(botao.dataset.valorDiarias || 0);
+    const valorServicos = converterNumero(botao.dataset.valorServicos || 0);
+
+    valorTotalAtual = valorDiarias + valorServicos;
+
+    document.getElementById("nomeHospedeModal").textContent = hospede;
+    document.getElementById("modalDiarias").textContent = diarias;
+    document.getElementById("modalValorDiaria").textContent = formatarMoeda(valorDiaria);
+    document.getElementById("modalValorDiarias").textContent = formatarMoeda(valorDiarias);
+    document.getElementById("modalValorServicos").textContent = formatarMoeda(valorServicos);
+    document.getElementById("descontosCheckout").value = "0";
+    document.getElementById("modalValorTotal").textContent = formatarMoeda(valorTotalAtual);
+    document.getElementById("modalCheckout").style.display = "flex";
+}
+
+document.getElementById("descontosCheckout").addEventListener("input", function() {
+    const desconto = converterNumero(this.value);
+
+    if (desconto < 0) {
+        this.value = "0";
+        document.getElementById("modalValorTotal").textContent = formatarMoeda(valorTotalAtual);
+        return;
+    }
+
+    if (desconto > valorTotalAtual) {
+        document.getElementById("modalValorTotal").textContent = "Desconto inválido";
+        return;
+    }
+
+    const total = valorTotalAtual - desconto;
+
+    document.getElementById("modalValorTotal").textContent = formatarMoeda(total);
+});
+
+function fecharModalCheckout() {
+    document.getElementById("modalCheckout").style.display = "none";
+    checkinSelecionado = null;
+}
+
+async function confirmarCheckout() {
+    if (!checkinSelecionado) {
+        alert("Check-in não informado.");
+        return;
+    }
+
+    const campoDesconto = document.getElementById("descontosCheckout");
+    const desconto = converterNumero(campoDesconto.value);
+
+    if (!Number.isFinite(desconto)) {
+        alert("Informe um desconto válido.");
+        campoDesconto.focus();
+        return;
+    }
+
+    if (desconto < 0) {
+        alert("O desconto não pode ser negativo.");
+        campoDesconto.focus();
+        return;
+    }
+
+    if (desconto > valorTotalAtual) {
+        alert(
+            "O desconto não pode ser maior que o valor da hospedagem.\n\n" +
+            "Valor disponível: " + formatarMoeda(valorTotalAtual)
+        );
+        campoDesconto.focus();
+        return;
+    }
+
+    const botao = document.getElementById("btnConfirmarCheckout");
+    const totalFinal = valorTotalAtual - desconto;
+
+    try {
+        botao.disabled = true;
+        botao.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
+
+        const resposta = await fetch("/checkouts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({
+                id_checkin: Number(checkinSelecionado),
+                descontos: desconto
+            })
+        });
+
+        const texto = await resposta.text();
+
+        let resultado;
+
+        try {
+            resultado = JSON.parse(texto);
+        } catch (erro) {
+            console.error("Status:", resposta.status);
+            console.error("Resposta:", texto);
+            throw new Error("O servidor não retornou JSON.");
+        }
+
+        if (!resposta.ok) {
+            throw new Error(resultado.erro || "Erro ao realizar check-out.");
+        }
+
+        alert(
+            "Check-out realizado com sucesso!\n\n" +
+            "Desconto aplicado: " +
+            formatarMoeda(resultado.descontos || desconto) +
+            "\n\n" +
+            "Valor que ficará disponível para pagamento: " +
+            formatarMoeda(resultado.valor_total || totalFinal)
+        );
+
+        fecharModalCheckout();
+        window.location.reload();
+
+    } catch (erro) {
+        console.error("Erro no check-out:", erro);
+        alert(erro.message || "Erro ao realizar check-out.");
+
+        botao.disabled = false;
+        botao.innerHTML = '<i class="fa-solid fa-check"></i> Finalizar';
+    }
+}
+
+document.getElementById("pesquisaCheckout").addEventListener("input", function() {
+    const texto = this.value.toLowerCase().trim();
+    const linhas = document.querySelectorAll("#corpoTabela tr");
+    let quantidade = 0;
+
+    linhas.forEach(function(linha) {
+        if (linha.querySelector(".sem-registros")) {
+            return;
+        }
+
+        const conteudo = linha.innerText.toLowerCase();
+
+        if (conteudo.includes(texto)) {
+            linha.style.display = "";
+            quantidade++;
+        } else {
+            linha.style.display = "none";
+        }
+    });
+
+    document.getElementById("totalCheckins").textContent = quantidade;
+});
+
+document.getElementById("modalConsumo").addEventListener("click", function(evento) {
+    if (evento.target === this) {
+        fecharModalConsumo();
+    }
+});
+
+document.getElementById("modalCheckout").addEventListener("click", function(evento) {
+    if (evento.target === this) {
+        fecharModalCheckout();
+    }
+});
+
+document.addEventListener("keydown", function(evento) {
+    if (evento.key === "Escape") {
+        fecharModalConsumo();
+        fecharModalCheckout();
+    }
+});
+</script>
+
+</body>
+</html>

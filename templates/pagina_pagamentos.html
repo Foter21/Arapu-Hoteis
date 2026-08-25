@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamentos - Arapuá Hotéis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pagamentos.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fa-solid fa-hotel"></i>
+            </div>
+            <div>
+                <h2>Arapuá</h2>
+                <span>HOTÉIS</span>
+            </div>
+        </div>
+        <nav class="menu">
+            <a href="{{ url_for('dashboard') }}">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('pagina_hoteis') }}">
+                <i class="fa-solid fa-hotel"></i>
+                <span>Hotéis</span>
+            </a>
+            <a href="{{ url_for('pagina_quartos') }}">
+                <i class="fa-solid fa-bed"></i>
+                <span>Quartos</span>
+            </a>
+            <a href="{{ url_for('pagina_hospedes') }}">
+                <i class="fa-solid fa-users"></i>
+                <span>Hóspedes</span>
+            </a>
+            <a href="{{ url_for('pagina_reservas') }}">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Reservas</span>
+            </a>
+            <a href="{{ url_for('pagina_checkin') }}">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Check-in</span>
+            </a>
+            <a href="{{ url_for('pagina_checkout') }}">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Check-out</span>
+            </a>
+
+            <a href="{{ url_for('pagina_consumos') }}" class="menu-item">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Consumos</span>
+            </a>
+
+            <a href="{{ url_for('pagina_pagamentos') }}" class="ativo">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Pagamentos</span>
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <a href="{{ url_for('logout') }}" class="sair">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    <main class="conteudo">
+        <header class="topo">
+            <div>
+                <span class="titulo-pequeno">ADMINISTRAÇÃO</span>
+                <h1>Pagamentos</h1>
+                <p>Gerencie os pagamentos dos hóspedes da rede Arapuá.</p>
+            </div>
+            <div class="usuario">
+                <div class="usuario-icone">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <strong>{{ nome }}</strong>
+                    <span>{{ perfil }}</span>
+                </div>
+            </div>
+        </header>
+        <section class="resumo">
+            <div class="stat-card">
+                <div class="stat-icon red">
+                    <i class="fa-solid fa-credit-card"></i>
+                </div>
+                <div class="stat-info">
+                    <strong>{{ total_pagamentos }}</strong>
+                    <span>Pagamentos</span>
+                    <small>Registrados</small>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-info">
+                    <strong>R$ {{ "%.2f"|format(total_recebido|float)|replace(".", ",") }}</strong>
+                    <span>Recebido</span>
+                    <small>Pagamentos pagos</small>
+                </div>
+            </div>
+        </section>
+        <section class="acoes">
+            <div class="pesquisa">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="pesquisaPagamento" placeholder="Pesquisar hóspede, reserva ou hotel..." autocomplete="off">
+            </div>
+            <button type="button" class="btn-novo" onclick="abrirModal()">
+                <i class="fa-solid fa-plus"></i>
+                Novo Pagamento
+            </button>
+        </section>
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>Pagamentos cadastrados</h2>
+                    <span>Lista de pagamentos da rede Arapuá</span>
+                </div>
+                <div class="total">
+                    <span id="totalPagamentos">{{ pagamentos|length }}</span>
+                    <small>pagamentos</small>
+                </div>
+            </div>
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Reserva</th>
+                            <th>Hóspede</th>
+                            <th>Hotel</th>
+                            <th>Quarto</th>
+                            <th>Valor</th>
+                            <th>Forma</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabelaPagamentos">
+                        {% for pagamento in pagamentos %}
+                        <tr>
+                            <td>#{{ pagamento.id_pagamento }}</td>
+                            <td><strong class="codigo">{{ pagamento.codigo_reserva or "Não informado" }}</strong></td>
+                            <td>
+                                <div class="hospede">
+                                    <div class="hospede-icone">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <strong>{{ pagamento.hospede or "Não informado" }}</strong>
+                                </div>
+                            </td>
+                            <td>{{ pagamento.hotel or "Não informado" }}</td>
+                            <td>
+                                {% if pagamento.quarto %}
+                                    Quarto {{ pagamento.quarto }}
+                                {% else %}
+                                    Não informado
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong class="valor">
+                                    R$ {{ "%.2f"|format(pagamento.valor|float)|replace(".", ",") }}
+                                </strong>
+                            </td>
+                            <td>
+                                {% if pagamento.forma_pagamento == "DINHEIRO" %}
+                                    Dinheiro
+                                {% elif pagamento.forma_pagamento == "PIX" %}
+                                    PIX
+                                {% elif pagamento.forma_pagamento == "CARTAO_CREDITO" %}
+                                    Cartão de Crédito
+                                {% elif pagamento.forma_pagamento == "CARTAO_DEBITO" %}
+                                    Cartão de Débito
+                                {% else %}
+                                    {{ pagamento.forma_pagamento or "Não informado" }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if pagamento.data_pagamento %}
+                                    {{ pagamento.data_pagamento.strftime("%d/%m/%Y %H:%M") }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if pagamento.status == "PAGO" %}
+                                    <span class="status pago-status">Pago</span>
+                                {% elif pagamento.status == "PENDENTE" %}
+                                    <span class="status pendente-status">Pendente</span>
+                                {% elif pagamento.status == "CANCELADO" %}
+                                    <span class="status cancelado-status">Cancelado</span>
+                                {% else %}
+                                    <span class="status">{{ pagamento.status or "Não informado" }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="9" class="sem-registros">
+                                <i class="fa-solid fa-credit-card"></i>
+                                <h3>Nenhum pagamento cadastrado</h3>
+                                <p>Cadastre o primeiro pagamento.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <div class="modal" id="modalPagamento">
+        <div class="modal-conteudo">
+            <div class="modal-header">
+                <div>
+                    <h2>Novo Pagamento</h2>
+                    <span>Registre um novo pagamento.</span>
+                </div>
+                <button type="button" onclick="fecharModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form id="formPagamento">
+                <div class="form-grid">
+                    <div class="campo campo-grande">
+                        <label>Checkout</label>
+                        <select id="id_checkout" required>
+                            <option value="">Selecione o checkout</option>
+                            {% for checkout in checkouts %}
+                            <option value="{{ checkout.id_checkout }}"
+                                data-valor-total="{{ checkout.valor_total|default(0)|float }}"
+                                data-valor-pago="{{ checkout.valor_pago|default(0)|float }}"
+                                data-valor-disponivel="{{ checkout.valor_disponivel|default(0)|float }}">
+                                {{ checkout.codigo_reserva }} - {{ checkout.hospede }} - Quarto {{ checkout.quarto }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="campo campo-grande" id="resumoCheckout" style="display:none;">
+                        <div style="display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;background:#f7f9f8;border:1px solid #e3e8e5;border-radius:8px;padding:12px 15px;">
+                            <div>
+                                <small style="display:block;color:#718078;font-size:10px;">TOTAL DO CHECKOUT</small>
+                                <strong id="valorTotalCheckout" style="color:#173f32;">R$ 0,00</strong>
+                            </div>
+                            <div>
+                                <small style="display:block;color:#718078;font-size:10px;">JÁ PAGO</small>
+                                <strong id="valorJaPago" style="color:#286247;">R$ 0,00</strong>
+                            </div>
+                            <div>
+                                <small style="display:block;color:#718078;font-size:10px;">DISPONÍVEL</small>
+                                <strong id="valorDisponivel" style="color:#b72d2d;">R$ 0,00</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label>Valor</label>
+                        <input type="number" id="valor" step="0.01" min="0.01" placeholder="Ex.: 250.00" required>
+                    </div>
+                    <div class="campo">
+                        <label>Forma de Pagamento</label>
+                        <select id="forma_pagamento" required>
+                            <option value="">Selecione</option>
+                            <option value="DINHEIRO">Dinheiro</option>
+                            <option value="PIX">PIX</option>
+                            <option value="CARTAO_CREDITO">Cartão de Crédito</option>
+                            <option value="CARTAO_DEBITO">Cartão de Débito</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>Status</label>
+                        <select id="status" required>
+                            <option value="PAGO">Pago</option>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="CANCELADO">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn-salvar" id="btnSalvar">
+                        <i class="fa-solid fa-check"></i>
+                        Salvar Pagamento
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function formatarMoeda(valor) {
+            return `R$ ${Number(valor || 0).toFixed(2).replace(".", ",")}`;
+        }
+        function atualizarValorCheckout() {
+            const select = document.getElementById("id_checkout");
+            const option = select.options[select.selectedIndex];
+            const resumo = document.getElementById("resumoCheckout");
+            const campoValor = document.getElementById("valor");
+            if (!select.value) {
+                resumo.style.display = "none";
+                campoValor.value = "";
+                campoValor.removeAttribute("max");
+                return;
+            }
+            const valorTotal = Number(option.dataset.valorTotal || 0);
+            const valorPago = Number(option.dataset.valorPago || 0);
+            const valorDisponivel = Math.max(Number(option.dataset.valorDisponivel || 0), 0);
+            document.getElementById("valorTotalCheckout").textContent = formatarMoeda(valorTotal);
+            document.getElementById("valorJaPago").textContent = formatarMoeda(valorPago);
+            document.getElementById("valorDisponivel").textContent = formatarMoeda(valorDisponivel);
+            campoValor.max = valorDisponivel.toFixed(2);
+            campoValor.value = valorDisponivel > 0 ? valorDisponivel.toFixed(2) : "";
+            resumo.style.display = "block";
+        }
+        function abrirModal() {
+            document.getElementById("formPagamento").reset();
+            document.getElementById("resumoCheckout").style.display = "none";
+            document.getElementById("valor").removeAttribute("max");
+            document.getElementById("modalPagamento").classList.add("mostrar");
+        }
+        function fecharModal() {
+            document.getElementById("modalPagamento").classList.remove("mostrar");
+        }
+        document.getElementById("id_checkout").addEventListener("change", atualizarValorCheckout);
+        document.getElementById("valor").addEventListener("input", function() {
+            const maximo = Number(this.max || 0);
+            const valor = Number(this.value || 0);
+            if (maximo > 0 && valor > maximo) {
+                this.value = maximo.toFixed(2);
+            }
+        });
+        document.getElementById("formPagamento").addEventListener("submit", async function(evento) {
+            evento.preventDefault();
+            const botao = document.getElementById("btnSalvar");
+            const selectCheckout = document.getElementById("id_checkout");
+            const option = selectCheckout.options[selectCheckout.selectedIndex];
+            const valor = Number(document.getElementById("valor").value || 0);
+            const valorDisponivel = Number(option?.dataset.valorDisponivel || 0);
+            const formaPagamento = document.getElementById("forma_pagamento").value;
+            const status = document.getElementById("status").value;
+            if (!selectCheckout.value) {
+                alert("Selecione o checkout.");
+                return;
+            }
+            if (valor <= 0) {
+                alert("Informe um valor maior que zero.");
+                return;
+            }
+            if (!formaPagamento) {
+                alert("Selecione a forma de pagamento.");
+                return;
+            }
+            if (valor > valorDisponivel) {
+                alert(`O valor máximo permitido para este checkout é ${formatarMoeda(valorDisponivel)}.`);
+                document.getElementById("valor").value = valorDisponivel > 0 ? valorDisponivel.toFixed(2) : "";
+                return;
+            }
+            const dados = {
+                id_checkout: selectCheckout.value,
+                valor: valor.toFixed(2),
+                forma_pagamento: formaPagamento,
+                status: status
+            };
+            try {
+                botao.disabled = true;
+                const resposta = await fetch("/pagamentos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "same-origin",
+                    body: JSON.stringify(dados)
+                });
+                const texto = await resposta.text();
+                let resultado;
+                try {
+                    resultado = JSON.parse(texto);
+                } catch (erro) {
+                    console.error("Resposta do servidor:", texto);
+                    throw new Error("O servidor não retornou JSON.");
+                }
+                if (!resposta.ok) {
+                    throw new Error(resultado.erro || "Erro ao salvar pagamento.");
+                }
+                alert(resultado.mensagem || "Pagamento salvo com sucesso!");
+                fecharModal();
+                window.location.reload();
+            } catch (erro) {
+                console.error("Erro ao salvar pagamento:", erro);
+                alert(erro.message || "Erro ao salvar pagamento.");
+                botao.disabled = false;
+            }
+        });
+        document.getElementById("pesquisaPagamento").addEventListener("input", function() {
+            const texto = this.value.toLowerCase().trim();
+            const linhas = document.querySelectorAll("#corpoTabelaPagamentos tr");
+            let quantidade = 0;
+            linhas.forEach(function(linha) {
+                if (linha.querySelector(".sem-registros")) {
+                    return;
+                }
+                const conteudo = linha.innerText.toLowerCase();
+                if (conteudo.includes(texto)) {
+                    linha.style.display = "";
+                    quantidade++;
+                } else {
+                    linha.style.display = "none";
+                }
+            });
+            document.getElementById("totalPagamentos").textContent = quantidade;
+        });
+        document.getElementById("modalPagamento").addEventListener("click", function(evento) {
+            if (evento.target === this) {
+                fecharModal();
+            }
+        });
+        document.addEventListener("keydown", function(evento) {
+            if (evento.key === "Escape") {
+                fecharModal();
+            }
+        });
+    </script>
+</body>
+</html>

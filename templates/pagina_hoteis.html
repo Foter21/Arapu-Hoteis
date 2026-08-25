@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hotéis - Arapuá Hotéis</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/hoteis.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="icon"
+          type="image/png"
+          href="{{ url_for('static', filename='images/favicon.png') }}">
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="logo-area">
+
+        <div class="logo-icon">
+            <i class="fa-solid fa-hotel"></i>
+        </div>
+
+        <div>
+            <h2>Arapuá</h2>
+            <span>HOTÉIS</span>
+        </div>
+
+    </div>
+
+
+    <nav class="menu">
+
+        <a href="{{ url_for('dashboard') }}">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+
+
+        <a href="{{ url_for('pagina_hoteis') }}" class="ativo">
+            <i class="fa-solid fa-hotel"></i>
+            <span>Hotéis</span>
+        </a>
+
+
+        <a href="{{url_for('pagina_quartos') }}">
+            <i class="fa-solid fa-bed"></i>
+            <span>Quartos</span>
+        </a>
+
+
+        <a href="{{url_for('pagina_hospedes') }}">
+            <i class="fa-solid fa-users"></i>
+            <span>Hóspedes</span>
+        </a>
+
+
+        <a href="{{url_for('pagina_reservas') }}">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Reservas</span>
+        </a>
+
+
+        <a href="{{url_for('pagina_checkin') }}">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Check-in</span>
+        </a>
+
+
+        <a href="{{url_for('pagina_checkout') }}">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Check-out</span>
+        </a>
+
+        <a href="{{url_for('pagina_consumos') }}" class="menu-item">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Consumos</span>
+        </a>
+
+        <a href="{{url_for('pagina_pagamentos') }}">
+            <i class="fa-solid fa-credit-card"></i>
+            <span>Pagamentos</span>
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <a href="{{ url_for('logout') }}" class="sair">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Sair</span>
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- =====================================================
+     CONTEÚDO PRINCIPAL
+===================================================== -->
+
+<main class="conteudo">
+
+
+    <!-- CABEÇALHO -->
+
+    <header class="topo">
+
+        <div>
+
+            <span class="titulo-pequeno">
+                ADMINISTRAÇÃO
+            </span>
+
+            <h1>Hotéis</h1>
+
+            <p>
+                Gerencie os hotéis da rede Arapuá.
+            </p>
+
+        </div>
+
+
+        <div class="usuario">
+
+            <div class="usuario-icone">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div>
+
+                <strong>
+                    {{ nome }}
+                </strong>
+
+                <span>
+                    {{ perfil }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         AÇÕES
+    ====================================================== -->
+
+    <section class="acoes">
+
+        <div class="pesquisa">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="text"
+                id="pesquisaHotel"
+                placeholder="Pesquisar hotel..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <button
+            type="button"
+            class="btn-novo"
+            onclick="abrirModal()">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Novo Hotel
+
+        </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         CARD
+    ====================================================== -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Hotéis cadastrados
+                </h2>
+
+                <span>
+                    Lista de hotéis da rede
+                </span>
+
+            </div>
+
+
+            <div class="total">
+
+                <span id="totalHoteis">
+                    {{ hoteis|length }}
+                </span>
+
+                <small>
+                    hotéis
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABELA
+        ================================================== -->
+
+        <div class="tabela-container">
+
+            <table id="tabelaHoteis">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Hotel</th>
+
+                        <th>Localização</th>
+
+                        <th>Categoria</th>
+
+                        <th>Telefone</th>
+
+                        <th>Status</th>
+
+                        <th>Ações</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="corpoTabela">
+
+                {% for hotel in hoteis %}
+
+                    <tr>
+
+                        <!-- ID -->
+
+                        <td>
+                            #{{ hotel.id_hotel }}
+                        </td>
+
+
+                        <!-- HOTEL -->
+
+                        <td>
+
+                            <div class="hotel-nome">
+
+                                <div class="hotel-icone">
+
+                                    <i class="fa-solid fa-hotel"></i>
+
+                                </div>
+
+                                <strong>
+                                    {{ hotel.nome }}
+                                </strong>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- LOCALIZAÇÃO -->
+
+                        <td>
+
+                            <div class="localizacao">
+
+                                <strong>
+                                    {{ hotel.cidade or "Não informada" }}
+                                </strong>
+
+                                <span>
+                                    {{ hotel.estado or "" }}
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- CATEGORIA -->
+
+                        <td>
+
+                            {% if hotel.categoria %}
+
+                                <span class="categoria">
+
+                                    {{ hotel.categoria }}
+
+                                    {% if hotel.quantidade_estrelas %}
+
+                                        ★ {{ hotel.quantidade_estrelas }}
+
+                                    {% endif %}
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="sem-categoria">
+                                    Não definida
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- TELEFONE -->
+
+                        <td>
+                            {{ hotel.telefone or "Não informado" }}
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            {% if hotel.status == "ATIVO" %}
+
+                                <span class="status ativo-status">
+                                    Ativo
+                                </span>
+
+                            {% else %}
+
+                                <span class="status inativo-status">
+                                    {{ hotel.status or "Não informado" }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- AÇÕES -->
+
+                        <td>
+
+                            <div class="acoes-tabela">
+
+                                <button
+                                    type="button"
+                                    class="btn-editar"
+                                    title="Editar"
+                                    data-id="{{ hotel.id_hotel }}"
+                                    onclick="editarHotel(this.dataset.id)">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn-excluir"
+                                    title="Excluir"
+                                    data-id="{{ hotel.id_hotel }}"
+                                    onclick="excluirHotel(this.dataset.id)">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                {% else %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="sem-registros">
+
+                            <i class="fa-solid fa-hotel"></i>
+
+                            <h3>
+                                Nenhum hotel cadastrado
+                            </h3>
+
+                            <p>
+                                Cadastre o primeiro hotel da rede.
+                            </p>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     MODAL HOTEL
+===================================================== -->
+
+<div
+    class="modal"
+    id="modalHotel">
+
+    <div class="modal-conteudo">
+
+
+        <!-- CABEÇALHO -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="tituloModal">
+                    Novo Hotel
+                </h2>
+
+                <span id="descricaoModal">
+                    Cadastre um novo hotel na rede.
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                onclick="fecharModal()">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             FORMULÁRIO
+        ================================================== -->
+
+        <form id="formHotel">
+
+            <input
+                type="hidden"
+                id="idHotel"
+            >
+
+
+            <div class="form-grid">
+
+
+                <!-- NOME -->
+
+                <div class="campo campo-grande">
+
+                    <label>
+                        Nome do Hotel
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        placeholder="Digite o nome do hotel"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CNPJ -->
+
+                <div class="campo">
+
+                    <label>
+                        CNPJ
+                    </label>
+
+                    <input
+                        type="text"
+                        id="cnpj"
+                        placeholder="00.000.000/0000-00"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- TELEFONE -->
+
+                <div class="campo">
+
+                    <label>
+                        Telefone
+                    </label>
+
+                    <input
+                        type="text"
+                        id="telefone"
+                        placeholder="(00) 00000-0000"
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="campo">
+
+                    <label>
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="hotel@arapua.com.br"
+                    >
+
+                </div>
+
+
+                <!-- CEP -->
+
+                <div class="campo">
+
+                    <label>
+                        CEP
+                    </label>
+
+                    <input
+                        type="text"
+                        id="cep"
+                        placeholder="00000-000"
+                    >
+
+                </div>
+
+
+                <!-- RUA -->
+
+                <div class="campo campo-grande">
+
+                    <label>
+                        Rua
+                    </label>
+
+                    <input
+                        type="text"
+                        id="rua"
+                        placeholder="Nome da rua"
+                    >
+
+                </div>
+
+
+                <!-- NÚMERO -->
+
+                <div class="campo">
+
+                    <label>
+                        Número
+                    </label>
+
+                    <input
+                        type="text"
+                        id="numero"
+                        placeholder="Número"
+                    >
+
+                </div>
+
+
+                <!-- BAIRRO -->
+
+                <div class="campo">
+
+                    <label>
+                        Bairro
+                    </label>
+
+                    <input
+                        type="text"
+                        id="bairro"
+                        placeholder="Bairro"
+                    >
+
+                </div>
+
+
+                <!-- CIDADE -->
+
+                <div class="campo">
+
+                    <label>
+                        Cidade
+                    </label>
+
+                    <input
+                        type="text"
+                        id="cidade"
+                        placeholder="Ex.: Belo Horizonte"
+                    >
+
+                </div>
+
+
+                <!-- ESTADO -->
+
+                <div class="campo">
+
+                    <label>
+                        Estado
+                    </label>
+
+                    <input
+                        type="text"
+                        id="estado"
+                        placeholder="MG"
+                        maxlength="2"
+                    >
+
+                </div>
+
+
+                <!-- CATEGORIA -->
+
+                <div class="campo">
+
+                    <label>
+                        Categoria
+                    </label>
+
+                    <select
+                        id="id_categoria"
+                        required>
+
+                        <option value="">
+                            Selecione uma categoria
+                        </option>
+
+                        {% for categoria in categorias %}
+
+                            <option value="{{ categoria.id_categoria }}">
+
+                                {{ categoria.nome }}
+
+                                {% if categoria.quantidade_estrelas %}
+
+                                    - {{ categoria.quantidade_estrelas }} estrelas
+
+                                {% endif %}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div
+                    class="campo"
+                    id="campoStatus"
+                    style="display: none;">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select id="status">
+
+                        <option value="ATIVO">
+                            Ativo
+                        </option>
+
+                        <option value="INATIVO">
+                            Inativo
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- RODAPÉ -->
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    onclick="fecharModal()">
+
+                    Cancelar
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn-salvar"
+                    id="btnSalvar">
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Salvar Hotel
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+let modoEdicao = false;
+
+let listaHoteis = [];
+
+
+/* =====================================================
+   CARREGAR HOTÉIS DO BANCO
+===================================================== */
+
+async function carregarHoteisDoBanco() {
+
+    try {
+
+        const resposta = await fetch("/hoteis", {
+            method: "GET",
+            credentials: "same-origin"
+        });
+
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                "Não foi possível carregar os hotéis."
+            );
+
+        }
+
+
+        const dados = await resposta.json();
+
+
+        if (!Array.isArray(dados)) {
+
+            throw new Error(
+                "O servidor retornou dados inválidos."
+            );
+
+        }
+
+
+        listaHoteis = dados;
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar hotéis:",
+            erro
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ABRIR MODAL - NOVO HOTEL
+===================================================== */
+
+function abrirModal() {
+
+    modoEdicao = false;
+
+
+    document
+        .getElementById("formHotel")
+        .reset();
+
+
+    document
+        .getElementById("idHotel")
+        .value = "";
+
+
+    document
+        .getElementById("tituloModal")
+        .textContent = "Novo Hotel";
+
+
+    document
+        .getElementById("descricaoModal")
+        .textContent =
+        "Cadastre um novo hotel na rede.";
+
+
+    document
+        .getElementById("campoStatus")
+        .style.display = "none";
+
+
+    document
+        .getElementById("status")
+        .value = "ATIVO";
+
+
+    document
+        .getElementById("modalHotel")
+        .classList.add("mostrar");
+
+}
+
+
+/* =====================================================
+   FECHAR MODAL
+===================================================== */
+
+function fecharModal() {
+
+    document
+        .getElementById("modalHotel")
+        .classList.remove("mostrar");
+
+}
+
+
+/* =====================================================
+   EDITAR HOTEL
+===================================================== */
+
+async function editarHotel(id) {
+
+    try {
+
+        /*
+         * Atualiza a lista diretamente pelo banco.
+         */
+
+        await carregarHoteisDoBanco();
+
+
+        const hotel = listaHoteis.find(
+            item =>
+                Number(item.id_hotel) === Number(id)
+        );
+
+
+        if (!hotel) {
+
+            alert(
+                "Hotel não encontrado."
+            );
+
+            return;
+
+        }
+
+
+        modoEdicao = true;
+
+
+        document
+            .getElementById("tituloModal")
+            .textContent =
+            "Editar Hotel";
+
+
+        document
+            .getElementById("descricaoModal")
+            .textContent =
+            "Atualize os dados do hotel.";
+
+
+        document
+            .getElementById("idHotel")
+            .value =
+            hotel.id_hotel || "";
+
+
+        document
+            .getElementById("nome")
+            .value =
+            hotel.nome || "";
+
+
+        document
+            .getElementById("cnpj")
+            .value =
+            hotel.cnpj || "";
+
+
+        document
+            .getElementById("telefone")
+            .value =
+            hotel.telefone || "";
+
+
+        document
+            .getElementById("email")
+            .value =
+            hotel.email || "";
+
+
+        document
+            .getElementById("cep")
+            .value =
+            hotel.cep || "";
+
+
+        document
+            .getElementById("rua")
+            .value =
+            hotel.rua || "";
+
+
+        document
+            .getElementById("numero")
+            .value =
+            hotel.numero || "";
+
+
+        document
+            .getElementById("bairro")
+            .value =
+            hotel.bairro || "";
+
+
+        document
+            .getElementById("cidade")
+            .value =
+            hotel.cidade || "";
+
+
+        document
+            .getElementById("estado")
+            .value =
+            hotel.estado || "";
+
+
+        document
+            .getElementById("id_categoria")
+            .value =
+            hotel.id_categoria || "";
+
+
+        document
+            .getElementById("status")
+            .value =
+            hotel.status || "ATIVO";
+
+
+        document
+            .getElementById("campoStatus")
+            .style.display = "";
+
+
+        document
+            .getElementById("modalHotel")
+            .classList.add("mostrar");
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao editar hotel:",
+            erro
+        );
+
+        alert(
+            "Não foi possível carregar os dados do hotel."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SALVAR / ATUALIZAR HOTEL
+===================================================== */
+
+document
+    .getElementById("formHotel")
+    .addEventListener(
+        "submit",
+        async function(evento) {
+
+            evento.preventDefault();
+
+
+            const nome =
+                document
+                    .getElementById("nome")
+                    .value
+                    .trim();
+
+
+            const cnpj =
+                document
+                    .getElementById("cnpj")
+                    .value
+                    .trim();
+
+
+            const telefone =
+                document
+                    .getElementById("telefone")
+                    .value
+                    .trim();
+
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
+
+
+            const cep =
+                document
+                    .getElementById("cep")
+                    .value
+                    .trim();
+
+
+            const rua =
+                document
+                    .getElementById("rua")
+                    .value
+                    .trim();
+
+
+            const numero =
+                document
+                    .getElementById("numero")
+                    .value
+                    .trim();
+
+
+            const bairro =
+                document
+                    .getElementById("bairro")
+                    .value
+                    .trim();
+
+
+            const cidade =
+                document
+                    .getElementById("cidade")
+                    .value
+                    .trim();
+
+
+            const estado =
+                document
+                    .getElementById("estado")
+                    .value
+                    .trim()
+                    .toUpperCase();
+
+
+            const idCategoria =
+                document
+                    .getElementById("id_categoria")
+                    .value;
+
+
+            const status =
+                document
+                    .getElementById("status")
+                    .value;
+
+
+            if (!nome) {
+
+                alert(
+                    "Informe o nome do hotel."
+                );
+
+                return;
+
+            }
+
+
+            if (!cnpj) {
+
+                alert(
+                    "Informe o CNPJ do hotel."
+                );
+
+                return;
+
+            }
+
+
+            if (!idCategoria) {
+
+                alert(
+                    "Selecione a categoria do hotel."
+                );
+
+                return;
+
+            }
+
+
+            const dados = {
+
+                nome: nome,
+
+                cnpj: cnpj,
+
+                telefone: telefone,
+
+                email: email,
+
+                cep: cep,
+
+                rua: rua,
+
+                numero: numero,
+
+                bairro: bairro,
+
+                cidade: cidade,
+
+                estado: estado,
+
+                id_categoria: idCategoria,
+
+                status: status
+
+            };
+
+
+            const idHotel =
+                document
+                    .getElementById("idHotel")
+                    .value;
+
+
+            /*
+             * IMPORTANTE:
+             *
+             * O seu Flask utiliza /hoteis
+             * e não /hotel.
+             */
+
+            let url;
+
+            let metodo;
+
+
+            if (modoEdicao) {
+
+                url =
+                    "/hoteis/" + idHotel;
+
+                metodo = "PUT";
+
+            } else {
+
+                url = "/hoteis";
+
+                metodo = "POST";
+
+            }
+
+
+            const botao =
+                document
+                    .getElementById("btnSalvar");
+
+
+            try {
+
+                botao.disabled = true;
+
+
+                botao.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+
+                const resposta =
+                    await fetch(
+                        url,
+                        {
+                            method: metodo,
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            credentials:
+                                "same-origin",
+
+                            body:
+                                JSON.stringify(dados)
+                        }
+                    );
+
+
+                const texto =
+                    await resposta.text();
+
+
+                let resultado;
+
+
+                try {
+
+                    resultado =
+                        JSON.parse(texto);
+
+                } catch (erroJson) {
+
+                    console.error(
+                        "Resposta recebida:",
+                        texto
+                    );
+
+
+                    throw new Error(
+                        "O servidor não retornou JSON."
+                    );
+
+                }
+
+
+                if (!resposta.ok) {
+
+                    throw new Error(
+                        resultado.erro ||
+                        "Erro ao salvar o hotel."
+                    );
+
+                }
+
+
+                alert(
+                    resultado.mensagem ||
+                    "Hotel salvo com sucesso!"
+                );
+
+
+                fecharModal();
+
+
+                window.location.reload();
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao salvar hotel:",
+                    erro
+                );
+
+
+                alert(
+                    erro.message ||
+                    "Erro ao salvar hotel."
+                );
+
+            } finally {
+
+                botao.disabled = false;
+
+
+                botao.innerHTML =
+                    '<i class="fa-solid fa-check"></i> Salvar Hotel';
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   EXCLUIR HOTEL
+===================================================== */
+
+async function excluirHotel(id) {
+
+    await carregarHoteisDoBanco();
+
+
+    const hotel =
+        listaHoteis.find(
+            item =>
+                Number(item.id_hotel) === Number(id)
+        );
+
+
+    if (!hotel) {
+
+        alert(
+            "Hotel não encontrado."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            'Deseja realmente excluir o hotel "' +
+            hotel.nome +
+            '"?'
+        );
+
+
+    if (!confirmar) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const resposta =
+            await fetch(
+                "/hoteis/" + id,
+                {
+                    method: "DELETE",
+
+                    credentials:
+                        "same-origin"
+                }
+            );
+
+
+        const texto =
+            await resposta.text();
+
+
+        let resultado;
+
+
+        try {
+
+            resultado =
+                JSON.parse(texto);
+
+        } catch (erroJson) {
+
+            console.error(
+                "Resposta do servidor:",
+                texto
+            );
+
+
+            throw new Error(
+                "O servidor não retornou JSON."
+            );
+
+        }
+
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                resultado.erro ||
+                "Não foi possível excluir o hotel."
+            );
+
+        }
+
+
+        alert(
+            resultado.mensagem ||
+            "Hotel excluído com sucesso!"
+        );
+
+
+        window.location.reload();
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao excluir hotel:",
+            erro
+        );
+
+
+        alert(
+            erro.message ||
+            "Erro ao excluir hotel."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PESQUISA
+===================================================== */
+
+document
+    .getElementById("pesquisaHotel")
+    .addEventListener(
+        "input",
+        function() {
+
+            const texto =
+                this.value
+                    .toLowerCase()
+                    .trim();
+
+
+            const linhas =
+                document.querySelectorAll(
+                    "#corpoTabela tr"
+                );
+
+
+            let quantidade = 0;
+
+
+            linhas.forEach(
+                function(linha) {
+
+                    const registroVazio =
+                        linha.querySelector(
+                            ".sem-registros"
+                        );
+
+
+                    if (registroVazio) {
+
+                        return;
+
+                    }
+
+
+                    const conteudo =
+                        linha.innerText
+                            .toLowerCase();
+
+
+                    if (
+                        conteudo.includes(texto)
+                    ) {
+
+                        linha.style.display =
+                            "";
+
+                        quantidade++;
+
+                    } else {
+
+                        linha.style.display =
+                            "none";
+
+                    }
+
+                }
+            );
+
+
+            document
+                .getElementById("totalHoteis")
+                .textContent =
+                quantidade;
+
+        }
+    );
+
+
+/* =====================================================
+   FECHAR MODAL CLICANDO FORA
+===================================================== */
+
+document
+    .getElementById("modalHotel")
+    .addEventListener(
+        "click",
+        function(evento) {
+
+            if (
+                evento.target === this
+            ) {
+
+                fecharModal();
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   ESC PARA FECHAR
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(evento) {
+
+        if (
+            evento.key === "Escape"
+        ) {
+
+            fecharModal();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CARREGAR DADOS AO ABRIR A PÁGINA
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        carregarHoteisDoBanco();
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>

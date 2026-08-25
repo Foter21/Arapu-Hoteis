@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check-in - Arapuá Hotéis</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/checkin.css') }}">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+<body>
+<aside class="sidebar">
+<div class="logo-area">
+<div class="logo-icon">
+<i class="fa-solid fa-hotel"></i>
+</div>
+<div>
+<h2>Arapuá</h2>
+<span>HOTÉIS</span>
+</div>
+</div>
+<nav class="menu">
+<a href="{{ url_for('dashboard') }}">
+<i class="fa-solid fa-chart-line"></i>
+<span>Dashboard</span>
+</a>
+<a href="{{ url_for('pagina_hoteis') }}">
+<i class="fa-solid fa-hotel"></i>
+<span>Hotéis</span>
+</a>
+<a href="{{ url_for('pagina_quartos') }}">
+<i class="fa-solid fa-bed"></i>
+<span>Quartos</span>
+</a>
+<a href="{{ url_for('pagina_hospedes') }}">
+<i class="fa-solid fa-users"></i>
+<span>Hóspedes</span>
+</a>
+<a href="{{ url_for('pagina_reservas') }}">
+<i class="fa-solid fa-calendar-check"></i>
+<span>Reservas</span>
+</a>
+<a href="{{ url_for('pagina_checkin') }}" class="ativo">
+<i class="fa-solid fa-right-to-bracket"></i>
+<span>Check-in</span>
+</a>
+<a href="{{ url_for('pagina_checkout') }}">
+<i class="fa-solid fa-right-from-bracket"></i>
+<span>Check-out</span>
+</a>
+<a href="{{ url_for('pagina_consumos') }}">
+<i class="fa-solid fa-receipt"></i>
+<span>Consumos</span>
+</a>
+<a href="{{ url_for('pagina_pagamentos') }}">
+<i class="fa-solid fa-credit-card"></i>
+<span>Pagamentos</span>
+</a>
+</nav>
+<div class="sidebar-bottom">
+<a href="{{ url_for('logout') }}" class="sair">
+<i class="fa-solid fa-arrow-right-from-bracket"></i>
+<span>Sair</span>
+</a>
+</div>
+</aside>
+<main class="conteudo">
+<header class="topo">
+<div>
+<span class="titulo-pequeno">HOSPEDAGEM</span>
+<h1>Check-in</h1>
+<p>Gerencie a entrada dos hóspedes nos hotéis da rede Arapuá.</p>
+</div>
+<div class="usuario">
+<div class="usuario-icone">
+<i class="fa-solid fa-user"></i>
+</div>
+<div>
+<strong>{{ nome }}</strong>
+<span>{{ perfil }}</span>
+</div>
+</div>
+</header>
+<section class="acoes">
+<div class="pesquisa">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input type="text" id="pesquisaCheckin" placeholder="Pesquisar hóspede, reserva ou quarto..." autocomplete="off">
+</div>
+<button type="button" class="btn-novo" onclick="abrirModal()">
+<i class="fa-solid fa-plus"></i>
+Novo Check-in
+</button>
+</section>
+<section class="card">
+<div class="card-header">
+<div>
+<h2>Check-ins realizados</h2>
+<span>Controle de entrada dos hóspedes</span>
+</div>
+<div class="total">
+<span id="totalCheckins">{{ checkins|length }}</span>
+<small>check-ins</small>
+</div>
+</div>
+<div class="tabela-container">
+<table id="tabelaCheckin">
+<thead>
+<tr>
+<th>ID</th>
+<th>Reserva</th>
+<th>Hóspede</th>
+<th>Hotel</th>
+<th>Quarto</th>
+<th>Entrada</th>
+<th>Saída prevista</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody id="corpoTabelaCheckin">
+{% for checkin in checkins %}
+<tr>
+<td>#{{ checkin.id_checkin }}</td>
+<td>
+<span class="codigo-reserva">
+{{ checkin.codigo_reserva }}
+</span>
+</td>
+<td>
+<div class="hospede-info">
+<div class="hospede-icone">
+<i class="fa-solid fa-user"></i>
+</div>
+<strong>{{ checkin.hospede }}</strong>
+</div>
+</td>
+<td>
+<div class="hotel-info">
+<strong>{{ checkin.hotel or "Não informado" }}</strong>
+</div>
+</td>
+<td>
+<span class="quarto-badge">
+<i class="fa-solid fa-bed"></i>
+{{ checkin.quarto }}
+</span>
+</td>
+<td>
+<span class="data-checkin">
+{{ checkin.data_checkin }}
+</span>
+</td>
+<td>
+{{ checkin.checkout_previsto }}
+</td>
+<td>
+<div class="acoes-tabela">
+<button
+type="button"
+class="btn-visualizar"
+title="Visualizar"
+data-id="{{ checkin.id_checkin }}"
+onclick="visualizarCheckin(this.dataset.id)">
+<i class="fa-solid fa-eye"></i>
+</button>
+<button
+type="button"
+class="btn-excluir"
+title="Excluir"
+data-id="{{ checkin.id_checkin }}"
+onclick="excluirCheckin(this.dataset.id)">
+<i class="fa-solid fa-trash"></i>
+</button>
+</div>
+</td>
+</tr>
+{% else %}
+<tr>
+<td colspan="8" class="sem-registros">
+<i class="fa-solid fa-right-to-bracket"></i>
+<h3>Nenhum check-in realizado</h3>
+<p>Registre o primeiro check-in da rede.</p>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<div class="modal" id="modalCheckin">
+<div class="modal-conteudo">
+<div class="modal-header">
+<div>
+<h2>Novo Check-in</h2>
+<span>Registre a entrada de um hóspede.</span>
+</div>
+<button type="button" onclick="fecharModal()">
+<i class="fa-solid fa-xmark"></i>
+</button>
+</div>
+<form id="formCheckin">
+<div class="form-grid">
+<div class="campo campo-grande">
+<label>Reserva</label>
+<select id="id_reserva" required>
+<option value="">Selecione a reserva</option>
+{% for reserva in reservas %}
+<option value="{{ reserva.id_reserva }}">
+{{ reserva.codigo_reserva }} - {{ reserva.hospede }} - Quarto {{ reserva.quarto }}
+</option>
+{% endfor %}
+</select>
+</div>
+<div class="campo">
+<label>Data e hora do Check-in</label>
+<input type="datetime-local" id="data_checkin" required>
+</div>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn-cancelar" onclick="fecharModal()">
+Cancelar
+</button>
+<button type="submit" class="btn-salvar" id="btnSalvar">
+<i class="fa-solid fa-check"></i>
+Confirmar Check-in
+</button>
+</div>
+</form>
+</div>
+</div>
+<script id="dadosCheckins" type="application/json">{{ checkins|tojson|safe }}</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let checkins = [];
+try {
+const elemento = document.getElementById("dadosCheckins");
+if (elemento) {
+checkins = JSON.parse(elemento.textContent || "[]");
+}
+} catch (erro) {
+console.error("Erro ao carregar check-ins:", erro);
+checkins = [];
+}
+function abrirModal() {
+document.getElementById("formCheckin").reset();
+const agora = new Date();
+agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
+document.getElementById("data_checkin").value = agora.toISOString().slice(0, 16);
+document.getElementById("modalCheckin").classList.add("mostrar");
+}
+function fecharModal() {
+document.getElementById("modalCheckin").classList.remove("mostrar");
+}
+document.getElementById("formCheckin").addEventListener("submit", async function(evento) {
+evento.preventDefault();
+const idReserva = document.getElementById("id_reserva").value;
+const dataCheckin = document.getElementById("data_checkin").value;
+if (!idReserva) {
+alert("Selecione uma reserva.");
+return;
+}
+const dados = {
+id_reserva: idReserva,
+data_checkin: dataCheckin
+};
+const botao = document.getElementById("btnSalvar");
+try {
+botao.disabled = true;
+botao.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+const resposta = await fetch("/checkin", {
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+"Accept": "application/json"
+},
+credentials: "same-origin",
+body: JSON.stringify(dados)
+});
+const texto = await resposta.text();
+let resultado;
+try {
+resultado = JSON.parse(texto);
+} catch (erro) {
+console.error("Resposta recebida pelo servidor:", texto);
+throw new Error("O servidor não retornou JSON.");
+}
+if (!resposta.ok) {
+throw new Error(resultado.erro || "Erro ao realizar check-in.");
+}
+alert(resultado.mensagem || "Check-in realizado com sucesso!");
+fecharModal();
+window.location.reload();
+} catch (erro) {
+console.error("Erro no check-in:", erro);
+alert(erro.message || "Erro ao realizar check-in.");
+} finally {
+botao.disabled = false;
+botao.innerHTML = '<i class="fa-solid fa-check"></i> Confirmar Check-in';
+}
+});
+function visualizarCheckin(id) {
+const checkin = checkins.find(
+item => Number(item.id_checkin) === Number(id)
+);
+if (!checkin) {
+alert("Check-in não encontrado.");
+return;
+}
+alert(
+"Reserva: " + (checkin.codigo_reserva || "") +
+"\n\nHóspede: " + (checkin.hospede || "") +
+"\n\nHotel: " + (checkin.hotel || "Não informado") +
+"\n\nQuarto: " + (checkin.quarto || "") +
+"\n\nEntrada: " + (checkin.data_checkin || "") +
+"\n\nSaída prevista: " + (checkin.checkout_previsto || "")
+);
+}
+async function excluirCheckin(id) {
+const checkin = checkins.find(
+item => Number(item.id_checkin) === Number(id)
+);
+if (!checkin) {
+alert("Check-in não encontrado.");
+return;
+}
+if (!confirm("Deseja realmente excluir este check-in?")) {
+return;
+}
+try {
+const resposta = await fetch("/checkins/" + id, {
+method: "DELETE",
+headers: {
+"Accept": "application/json"
+},
+credentials: "same-origin"
+});
+const texto = await resposta.text();
+let resultado;
+try {
+resultado = JSON.parse(texto);
+} catch (erro) {
+console.error("Resposta recebida pelo servidor:", texto);
+throw new Error("O servidor não retornou JSON.");
+}
+if (!resposta.ok) {
+throw new Error(
+resultado.erro ||
+"Não foi possível excluir o check-in."
+);
+}
+alert(
+resultado.mensagem ||
+"Check-in excluído com sucesso!"
+);
+window.location.reload();
+} catch (erro) {
+console.error("Erro ao excluir check-in:", erro);
+alert(
+erro.message ||
+"Erro ao excluir check-in."
+);
+}
+}
+document.getElementById("pesquisaCheckin").addEventListener("input", function() {
+const texto = this.value.toLowerCase().trim();
+const linhas = document.querySelectorAll("#corpoTabelaCheckin tr");
+let quantidade = 0;
+linhas.forEach(function(linha) {
+if (linha.querySelector(".sem-registros")) {
+return;
+}
+const conteudo = linha.innerText.toLowerCase();
+if (conteudo.includes(texto)) {
+linha.style.display = "";
+quantidade++;
+} else {
+linha.style.display = "none";
+}
+});
+document.getElementById("totalCheckins").textContent = quantidade;
+});
+document.getElementById("modalCheckin").addEventListener("click", function(evento) {
+if (evento.target === this) {
+fecharModal();
+}
+});
+document.addEventListener("keydown", function(evento) {
+if (evento.key === "Escape") {
+fecharModal();
+}
+});
+</script>
+</body>
+</html>
