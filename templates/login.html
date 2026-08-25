@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Arapuã Hotéis - Login</title>
+
+    <!-- FAVICON -->
+    <link rel="icon"
+          type="image/png"
+          href="{{ url_for('static', filename='images/favicon.png') }}">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <!-- =====================================================
+             LADO ESQUERDO
+        ====================================================== -->
+
+        <section class="login-image">
+
+            <div class="image-overlay"></div>
+
+            <div class="decor decor-top"></div>
+            <div class="decor decor-bottom"></div>
+
+            <div class="brand-content">
+
+                <!-- LOGO -->
+                <div class="logo-container">
+
+                    <img
+                        src="{{ url_for('static', filename='images/logo.png') }}"
+                        alt="Logo Arapuã Hotéis"
+                        class="logo"
+                    >
+
+                </div>
+
+                <!-- MARCA -->
+                <div class="brand-area">
+
+                    <span class="brand-small">
+                        SISTEMA DE HOTÉIS
+                    </span>
+
+                    <div class="brand-line">
+                        <span></span>
+                        <i>◆</i>
+                        <span></span>
+                    </div>
+
+                    <h2>
+                        Conectando tradição,
+                        <strong>cultura e identidade.</strong>
+                    </h2>
+
+                    <p>
+                        Hospitalidade que acolhe,
+                        experiências que ficam.
+                    </p>
+
+                </div>
+
+                <!-- BENEFÍCIOS -->
+                <div class="brand-features">
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            🌿
+                        </div>
+
+                        <span>
+                            Conexão com a<br>
+                            <strong>Natureza</strong>
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            ☀
+                        </div>
+
+                        <span>
+                            Cultura e<br>
+                            <strong>identidade</strong>
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            🌊
+                        </div>
+
+                        <span>
+                            Hospitalidade<br>
+                            <strong>com alma</strong>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             LADO DIREITO
+        ====================================================== -->
+
+        <section class="login-area">
+
+            <div class="login-box">
+
+                <!-- LOGO PARA CELULAR -->
+                <div class="mobile-logo">
+
+                    <img
+                        src="{{ url_for('static', filename='images/logo.png') }}"
+                        alt="Logo Arapuã Hotéis"
+                    >
+
+                </div>
+
+
+                <!-- CABEÇALHO -->
+                <div class="login-header">
+
+                    <span class="welcome">
+                        BEM-VINDO
+                    </span>
+
+                    <h2>
+                        Acesse
+                        <span>sua conta</span>
+                    </h2>
+
+                    <p class="description">
+                        Entre com seus dados para continuar.
+                    </p>
+
+                </div>
+
+
+                <!-- =================================================
+                     MENSAGENS DO FLASK
+                ================================================== -->
+
+                {% with messages = get_flashed_messages() %}
+
+                    {% if messages %}
+
+                        <div class="flash-messages">
+
+                            {% for message in messages %}
+
+                                <div class="flash-message">
+                                    {{ message }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                <!-- =================================================
+                     FORMULÁRIO
+                ================================================== -->
+
+                <form
+                    action="{{ url_for('login') }}"
+                    method="POST"
+                    class="login-form"
+                >
+
+                    <!-- E-MAIL -->
+                    <div class="input-group">
+
+                        <label for="email">
+                            E-mail
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                @
+                            </span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Digite seu e-mail"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SENHA -->
+                    <div class="input-group">
+
+                        <label for="senha">
+                            Senha
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ●
+                            </span>
+
+                            <input
+                                type="password"
+                                id="senha"
+                                name="senha"
+                                placeholder="Digite sua senha"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="show-password"
+                                onclick="togglePassword()"
+                                aria-label="Mostrar ou ocultar senha"
+                            >
+                                ◉
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         OPÇÕES
+                    ================================================== -->
+
+                    <div class="form-options">
+
+                        <label class="remember">
+
+                            <input
+                                type="checkbox"
+                                name="lembrar"
+                            >
+
+                            <span>
+                                Lembrar de mim
+                            </span>
+
+                        </label>
+
+
+                        <a
+                            href="#"
+                            class="forgot-password"
+                            onclick="return false;"
+                        >
+                            Esqueci minha senha
+                        </a>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         BOTÃO ENTRAR
+                    ================================================== -->
+
+                    <button
+                        type="submit"
+                        class="login-button"
+                    >
+
+                        <span>
+                            ENTRAR
+                        </span>
+
+                        <strong>
+                            →
+                        </strong>
+
+                    </button>
+
+                </form>
+
+
+                <!-- =================================================
+                     DIVISOR
+                ================================================== -->
+
+                <div class="divider">
+
+                    <span></span>
+
+                    <p>ou</p>
+
+                    <span></span>
+
+                </div>
+
+
+                <!-- =================================================
+                     SEGURANÇA
+                ================================================== -->
+
+                <div class="security">
+
+                    <div class="security-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Ambiente seguro
+                        </strong>
+
+                        <span>
+                            Seus dados estão protegidos
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     RODAPÉ
+                ================================================== -->
+
+                <div class="footer-text">
+
+                    <span>
+                        Tradição Indígena
+                    </span>
+
+                    <b>•</b>
+
+                    <span>
+                        Cultura e identidade
+                    </span>
+
+                    <b>•</b>
+
+                    <span>
+                        Hospitalidade
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script>
+
+        function togglePassword() {
+
+            const senha = document.getElementById("senha");
+            const botao = document.querySelector(".show-password");
+
+            if (!senha || !botao) {
+                return;
+            }
+
+            if (senha.type === "password") {
+
+                senha.type = "text";
+
+                botao.textContent = "○";
+
+                botao.setAttribute(
+                    "aria-label",
+                    "Ocultar senha"
+                );
+
+            } else {
+
+                senha.type = "password";
+
+                botao.textContent = "◉";
+
+                botao.setAttribute(
+                    "aria-label",
+                    "Mostrar senha"
+                );
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
