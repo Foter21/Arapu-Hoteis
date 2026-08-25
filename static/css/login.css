@@ -1,0 +1,1285 @@
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background: #f4f6f2;
+    color: #252525;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.login-container {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   LADO ESQUERDO
+========================================================= */
+
+.login-image {
+    position: relative;
+
+    width: 55%;
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background-image:
+        url("../images/hotel-bg.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+/* =========================================================
+   CAMADA SOBRE A IMAGEM
+========================================================= */
+
+.image-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(13, 76, 48, 0.72),
+            rgba(20, 65, 45, 0.38) 45%,
+            rgba(163, 35, 45, 0.68)
+        );
+
+    z-index: 1;
+}
+
+
+/* =========================================================
+   EFEITOS DE LUZ
+========================================================= */
+
+.login-image::before {
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+    height: 500px;
+
+    top: -220px;
+    left: -180px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.12),
+            transparent 70%
+        );
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
+.login-image::after {
+    content: "";
+
+    position: absolute;
+
+    width: 600px;
+    height: 600px;
+
+    right: -350px;
+    bottom: -350px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 193, 7, 0.10),
+            transparent 70%
+        );
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   DECORAÇÕES
+========================================================= */
+
+.decor {
+    position: absolute;
+
+    z-index: 3;
+
+    opacity: 0.35;
+
+    pointer-events: none;
+}
+
+
+.decor-top {
+    width: 250px;
+    height: 250px;
+
+    top: -125px;
+    left: -125px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.5);
+
+    border-radius: 50%;
+}
+
+
+.decor-bottom {
+    width: 320px;
+    height: 320px;
+
+    right: -160px;
+    bottom: -160px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.4);
+
+    border-radius: 50%;
+}
+
+
+/* =========================================================
+   CONTEÚDO DA MARCA
+========================================================= */
+
+.brand-content {
+    position: relative;
+
+    z-index: 5;
+
+    width: 85%;
+    max-width: 650px;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    padding: 40px 20px;
+}
+
+
+/* =========================================================
+   LOGO
+   SEM FUNDO BRANCO
+========================================================= */
+
+.logo-container {
+    width: 500px;
+    height: 300px;
+
+    margin: 0 auto 35px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    /* IMPORTANTE:
+       REMOVE O FUNDO BRANCO
+    */
+    background: transparent;
+
+    /* REMOVE O QUADRADO */
+    border: none;
+    border-radius: 0;
+
+    /* REMOVE ESPAÇO AO REDOR */
+    padding: 0;
+
+    /* REMOVE SOMBRA DO QUADRADO */
+    box-shadow: none;
+
+    backdrop-filter: none;
+
+    animation:
+        logoFloat 4s ease-in-out infinite;
+}
+
+
+.logo {
+    width: 120%;
+    height: 120%;
+
+    object-fit: contain;
+
+    border-radius: 0;
+
+    /* SOMBRA APLICADA SOMENTE NA LOGO */
+    filter:
+        drop-shadow(
+            0 8px 15px
+            rgba(0, 0, 0, 0.35)
+        );
+}
+
+
+/* =========================================================
+   ANIMAÇÃO DA LOGO
+========================================================= */
+
+@keyframes logoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+}
+
+
+/* =========================================================
+   TEXTO DA MARCA
+========================================================= */
+
+.brand-small {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 25px;
+
+    font-weight: 700;
+
+    letter-spacing: 5px;
+
+    color:#ffffff;
+}
+
+
+.brand-area h1 {
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(48px, 5vw, 72px);
+
+    line-height: 1;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.35);
+}
+
+
+.brand-line {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 15px;
+
+    margin: 18px auto;
+}
+
+
+.brand-line span {
+    width: 70px;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #ac2626
+        );
+}
+
+
+.brand-line span:last-child {
+    background:
+        linear-gradient(
+            90deg,
+            #c83136,
+            transparent
+        );
+}
+
+
+.brand-line i {
+    color: #931f1f;
+
+    font-size: 13px;
+
+    font-style: normal;
+}
+
+
+.brand-area h2 {
+    font-size:
+        clamp(22px, 2.5vw, 31px);
+
+    line-height: 1.35;
+
+    font-weight: 400;
+
+    text-shadow:
+        0 3px 10px
+        rgba(0,0,0,0.3);
+}
+
+
+.brand-area h2 strong {
+    color: #ff2929;
+
+    font-weight: 700;
+}
+
+
+.brand-area p {
+    margin-top: 15px;
+
+    font-size: 16px;
+
+    letter-spacing: 0.5px;
+
+    color:
+        rgba(255,255,255,0.90);
+}
+
+
+/* =========================================================
+   CARACTERÍSTICAS
+========================================================= */
+
+.brand-features {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 45px;
+}
+
+
+.feature {
+    min-width: 150px;
+
+    padding: 0 25px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    border-right:
+        1px solid
+        rgba(255,255,255,0.35);
+}
+
+
+.feature:last-child {
+    border-right: none;
+}
+
+
+.feature-icon {
+    font-size: 23px;
+
+    filter:
+        drop-shadow(
+            0 3px 5px
+            rgba(0,0,0,0.25)
+        );
+}
+
+
+.feature span {
+    text-align: left;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+
+    color:
+        rgba(255,255,255,0.85);
+}
+
+
+.feature strong {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   LADO DIREITO
+========================================================= */
+
+.login-area {
+    position: relative;
+
+    width: 45%;
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f8faf7
+        );
+}
+
+
+/* =========================================================
+   DETALHE COLORIDO LATERAL
+========================================================= */
+
+.login-area::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 5px;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            180deg,
+            #174d32,
+            #f0c52d,
+            #a3232d
+        );
+}
+
+
+/* =========================================================
+   BOX
+========================================================= */
+
+.login-box {
+    width: 100%;
+
+    max-width: 470px;
+}
+
+
+/* =========================================================
+   LOGO MOBILE
+========================================================= */
+
+.mobile-logo {
+    display: none;
+
+    text-align: center;
+
+    margin-bottom: 25px;
+}
+
+
+.mobile-logo img {
+    width: 100px;
+    height: 100px;
+
+    object-fit: contain;
+
+    border-radius: 0;
+
+    filter:
+        drop-shadow(
+            0 5px 10px
+            rgba(0,0,0,0.20)
+        );
+}
+
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+
+.login-header {
+    margin-bottom: 35px;
+}
+
+
+.welcome {
+    display: block;
+
+    margin-bottom: 12px;
+
+    color: #a3232d;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 4px;
+}
+
+
+.login-box h2 {
+    font-size: 38px;
+
+    line-height: 1.15;
+
+    color: #174d32;
+
+    font-weight: 800;
+}
+
+
+.login-box h2 span {
+    color: #a3232d;
+}
+
+
+.description {
+    margin-top: 12px;
+
+    color: #777;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   MENSAGEM FLASK
+========================================================= */
+
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+
+.flash-message {
+    padding: 14px 16px;
+
+    border-radius: 10px;
+
+    background: #fce8e9;
+
+    border-left:
+        4px solid #a3232d;
+
+    color: #8a1c25;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.input-group {
+    width: 100%;
+
+    margin-bottom: 22px;
+}
+
+
+.input-group label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #303030;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+.input-wrapper {
+    position: relative;
+
+    width: 100%;
+}
+
+
+.input-icon {
+    position: absolute;
+
+    left: 17px;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    color: #277047;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+
+.input-wrapper input {
+    width: 100%;
+
+    height: 56px;
+
+    padding:
+        0 50px;
+
+    border:
+        1.5px solid
+        #dce2dd;
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #222;
+
+    font-size: 15px;
+
+    transition:
+        0.25s ease;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.03);
+}
+
+
+.input-wrapper input::placeholder {
+    color: #a4a8a5;
+}
+
+
+.input-wrapper input:focus {
+    border-color: #277047;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(39,112,71,0.10);
+}
+
+
+/* =========================================================
+   SENHA
+========================================================= */
+
+.show-password {
+    position: absolute;
+
+    right: 15px;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    border: none;
+
+    background: transparent;
+
+    color: #777;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    transition: 0.2s;
+}
+
+
+.show-password:hover {
+    color: #a3232d;
+}
+
+
+/* =========================================================
+   OPÇÕES
+========================================================= */
+
+.form-options {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 28px;
+}
+
+
+.remember {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #666;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+
+.remember input {
+    width: 17px;
+    height: 17px;
+
+    accent-color: #277047;
+
+    cursor: pointer;
+}
+
+
+.forgot-password {
+    color: #a3232d;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   BOTÃO
+========================================================= */
+
+.login-button {
+    position: relative;
+
+    width: 100%;
+
+    height: 57px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            100deg,
+            #174d32,
+            #277047 65%,
+            #a3232d
+        );
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 10px 25px
+        rgba(23,77,50,0.20);
+
+    transition:
+        0.25s ease;
+}
+
+
+.login-button strong {
+    font-size: 21px;
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+.login-button:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 15px 30px
+        rgba(23,77,50,0.25);
+}
+
+
+.login-button:hover strong {
+    transform:
+        translateX(5px);
+}
+
+
+.login-button:active {
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================================
+   DIVISOR
+========================================================= */
+
+.divider {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin: 32px 0;
+}
+
+
+.divider span {
+    flex: 1;
+
+    height: 1px;
+
+    background: #e2e6e3;
+}
+
+
+.divider p {
+    color: #999;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   SEGURANÇA
+========================================================= */
+
+.security {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+
+    color: #6f756f;
+}
+
+
+.security-icon {
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eaf4ed;
+
+    color: #277047;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+
+.security div:last-child {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.security strong {
+    font-size: 12px;
+
+    color: #505650;
+}
+
+
+.security span {
+    font-size: 11px;
+
+    color: #999;
+}
+
+
+/* =========================================================
+   RODAPÉ
+========================================================= */
+
+.footer-text {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    color: #999;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+
+.footer-text b {
+    color: #a3232d;
+
+    margin: 0 4px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .login-image {
+        width: 50%;
+    }
+
+    .login-area {
+        width: 50%;
+
+        padding: 35px;
+    }
+
+    .brand-content {
+        width: 95%;
+    }
+
+    .logo-container {
+        width: 160px;
+        height: 160px;
+
+        margin-bottom: 25px;
+    }
+
+    .brand-area h1 {
+        font-size: 52px;
+    }
+
+    .brand-features {
+        margin-top: 30px;
+    }
+
+    .feature {
+        min-width: auto;
+
+        padding: 0 12px;
+    }
+
+}
+
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .login-container {
+        display: block;
+    }
+
+
+    .login-image {
+        width: 100%;
+
+        min-height: 430px;
+
+        height: auto;
+    }
+
+
+    .brand-content {
+        width: 92%;
+
+        padding:
+            50px 10px;
+    }
+
+
+    .logo-container {
+        width: 125px;
+        height: 125px;
+
+        margin-bottom: 25px;
+
+        background: transparent;
+
+        padding: 0;
+
+        box-shadow: none;
+
+        border-radius: 0;
+    }
+
+
+    .brand-small {
+        font-size: 9px;
+
+        letter-spacing: 3px;
+    }
+
+
+    .brand-area h1 {
+        font-size: 46px;
+    }
+
+
+    .brand-area h2 {
+        font-size: 20px;
+    }
+
+
+    .brand-area p {
+        font-size: 14px;
+    }
+
+
+    .brand-features {
+        margin-top: 30px;
+    }
+
+
+    .feature {
+        padding: 0 9px;
+    }
+
+
+    .feature-icon {
+        font-size: 18px;
+    }
+
+
+    .feature span {
+        font-size: 9px;
+    }
+
+
+    .login-area {
+        width: 100%;
+
+        min-height: auto;
+
+        padding:
+            45px 25px 50px;
+    }
+
+
+    .login-area::before {
+        display: none;
+    }
+
+
+    .mobile-logo {
+        display: block;
+    }
+
+
+    .login-box {
+        max-width: 500px;
+    }
+
+
+    .login-box h2 {
+        font-size: 32px;
+    }
+
+}
+
+
+/* =========================================================
+   CELULAR PEQUENO
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .login-image {
+        min-height: 390px;
+    }
+
+
+    .brand-content {
+        padding:
+            35px 10px;
+    }
+
+
+    .logo-container {
+        width: 105px;
+        height: 105px;
+
+        margin-bottom: 20px;
+
+        background: transparent;
+
+        padding: 0;
+
+        box-shadow: none;
+
+        border-radius: 0;
+    }
+
+
+    .brand-area h1 {
+        font-size: 39px;
+    }
+
+
+    .brand-area h2 {
+        font-size: 18px;
+    }
+
+
+    .brand-line {
+        margin: 12px auto;
+    }
+
+
+    .brand-area p {
+        font-size: 13px;
+    }
+
+
+    .brand-features {
+        margin-top: 25px;
+    }
+
+
+    .feature {
+        padding: 0 6px;
+    }
+
+
+    .feature-icon {
+        display: none;
+    }
+
+
+    .feature span {
+        font-size: 8px;
+    }
+
+
+    .login-area {
+        padding:
+            35px 20px 45px;
+    }
+
+
+    .login-box h2 {
+        font-size: 29px;
+    }
+
+
+    .form-options {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 13px;
+    }
+
+
+    .forgot-password {
+        align-self: flex-end;
+    }
+
+
+    .login-button {
+        height: 55px;
+    }
+
+}
