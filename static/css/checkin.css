@@ -1,0 +1,896 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7f6;
+    color: #26332e;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    background: #173f32;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 25px 15px;
+
+    z-index: 100;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 0 10px 30px;
+
+    border-bottom: 1px solid rgba(255,255,255,.15);
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+
+    background: #b72d2d;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 21px;
+
+    flex-shrink: 0;
+}
+
+.logo-area h2 {
+    font-size: 22px;
+}
+
+.logo-area span {
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    color: #d8c79b;
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+.menu {
+    margin-top: 25px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.menu a,
+.sidebar-bottom a {
+    text-decoration: none;
+
+    color: #dce8e3;
+
+    padding: 13px 14px;
+
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    font-size: 14px;
+
+    transition: .2s;
+}
+
+.menu a:hover,
+.menu a.ativo {
+    background: #b72d2d;
+    color: white;
+}
+
+.menu i {
+    width: 20px;
+    text-align: center;
+}
+
+
+/* =========================================================
+   PARTE INFERIOR
+========================================================= */
+
+.sidebar-bottom {
+    margin-top: auto;
+
+    border-top: 1px solid rgba(255,255,255,.15);
+
+    padding-top: 15px;
+}
+
+.sidebar-bottom a:hover {
+    background: rgba(255,255,255,.08);
+}
+
+.sidebar-bottom .sair {
+    color: #ffb3b3;
+}
+
+
+/* =========================================================
+   CONTEÚDO
+========================================================= */
+
+.conteudo {
+    margin-left: 250px;
+
+    min-height: 100vh;
+
+    padding: 35px 45px;
+}
+
+
+/* =========================================================
+   TOPO
+========================================================= */
+
+.topo {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 35px;
+}
+
+.titulo-pequeno {
+    color: #b72d2d;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+}
+
+.topo h1 {
+    font-size: 32px;
+
+    margin-top: 5px;
+
+    color: #173f32;
+}
+
+.topo p {
+    margin-top: 7px;
+
+    color: #718078;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   USUÁRIO
+========================================================= */
+
+.usuario {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.usuario-icone {
+    width: 43px;
+    height: 43px;
+
+    background: #e8eee9;
+
+    color: #173f32;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.usuario strong {
+    display: block;
+
+    font-size: 14px;
+}
+
+.usuario span {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    color: #7a8780;
+}
+
+
+/* =========================================================
+   AÇÕES
+========================================================= */
+
+.acoes {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+.pesquisa {
+    background: white;
+
+    border: 1px solid #dfe5e1;
+
+    border-radius: 8px;
+
+    height: 45px;
+
+    width: 420px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 15px;
+
+    gap: 10px;
+}
+
+.pesquisa i {
+    color: #8b9891;
+}
+
+.pesquisa input {
+    border: none;
+
+    outline: none;
+
+    width: 100%;
+
+    font-size: 13px;
+}
+
+.btn-novo {
+    border: none;
+
+    background: #b72d2d;
+
+    color: white;
+
+    border-radius: 8px;
+
+    padding: 0 20px;
+
+    height: 45px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    transition: .2s;
+}
+
+.btn-novo:hover {
+    background: #942222;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+    background: white;
+
+    border: 1px solid #e3e8e5;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 22px 25px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-bottom: 1px solid #edf0ee;
+}
+
+.card-header h2 {
+    color: #173f32;
+
+    font-size: 17px;
+}
+
+.card-header span {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 12px;
+
+    color: #849088;
+}
+
+.total {
+    font-size: 22px;
+
+    font-weight: bold;
+
+    color: #b72d2d;
+
+    text-align: right;
+}
+
+.total small {
+    display: block;
+
+    color: #87938d;
+
+    font-size: 10px;
+
+    font-weight: normal;
+}
+
+
+/* =========================================================
+   TABELA
+========================================================= */
+
+.tabela-container {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f7f9f8;
+}
+
+th {
+    text-align: left;
+
+    padding: 14px 20px;
+
+    font-size: 11px;
+
+    color: #6f7c75;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+    white-space: nowrap;
+}
+
+td {
+    padding: 15px 20px;
+
+    border-top: 1px solid #edf0ee;
+
+    font-size: 13px;
+
+    color: #526059;
+
+    white-space: nowrap;
+}
+
+tbody tr:hover {
+    background: #fafcfa;
+}
+
+
+/* =========================================================
+   HÓSPEDE
+========================================================= */
+
+.hospede-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.hospede-icone {
+    width: 35px;
+    height: 35px;
+
+    background: #e8eee9;
+
+    color: #286247;
+
+    border-radius: 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hospede-info strong {
+    color: #26332e;
+}
+
+
+/* =========================================================
+   RESERVA
+========================================================= */
+
+.codigo-reserva {
+    background: #f7e7e7;
+
+    color: #a52d2d;
+
+    padding: 6px 9px;
+
+    border-radius: 6px;
+
+    font-size: 11px;
+
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   QUARTO
+========================================================= */
+
+.quarto-badge {
+    background: #eaf2ed;
+
+    color: #286247;
+
+    padding: 6px 9px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   DATA
+========================================================= */
+
+.data-checkin {
+    color: #286247;
+
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   AÇÕES
+========================================================= */
+
+.acoes-tabela {
+    display: flex;
+
+    gap: 7px;
+}
+
+.acoes-tabela button {
+    width: 32px;
+    height: 32px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.btn-visualizar {
+    background: #e8f0ec;
+
+    color: #286247;
+}
+
+.btn-excluir {
+    background: #fae9e9;
+
+    color: #b72d2d;
+}
+
+.btn-visualizar:hover,
+.btn-excluir:hover {
+    opacity: .75;
+}
+
+
+/* =========================================================
+   SEM REGISTROS
+========================================================= */
+
+.sem-registros {
+    text-align: center;
+
+    padding: 60px !important;
+
+    white-space: normal;
+}
+
+.sem-registros i {
+    font-size: 35px;
+
+    color: #b72d2d;
+
+    margin-bottom: 15px;
+}
+
+.sem-registros h3 {
+    color: #35433c;
+
+    margin-bottom: 5px;
+}
+
+.sem-registros p {
+    color: #8b9690;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.55);
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 15px;
+
+    z-index: 999;
+}
+
+.modal.mostrar {
+    display: flex;
+}
+
+.modal-conteudo {
+    width: 600px;
+
+    max-width: 100%;
+
+    background: white;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: 0 15px 45px rgba(0,0,0,.20);
+}
+
+
+/* =========================================================
+   CABEÇALHO MODAL
+========================================================= */
+
+.modal-header {
+    padding: 18px 22px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-bottom: 1px solid #edf0ee;
+}
+
+.modal-header h2 {
+    color: #173f32;
+
+    font-size: 19px;
+}
+
+.modal-header span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #89948e;
+
+    font-size: 11px;
+}
+
+.modal-header button {
+    border: none;
+
+    background: none;
+
+    font-size: 19px;
+
+    color: #7b8781;
+
+    cursor: pointer;
+}
+
+.modal-header button:hover {
+    color: #b72d2d;
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+========================================================= */
+
+#formCheckin {
+    padding: 20px 22px;
+}
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px 18px;
+}
+
+.campo {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.campo-grande {
+    grid-column: span 2;
+}
+
+.campo label {
+    font-size: 11px;
+
+    font-weight: bold;
+
+    color: #46534c;
+}
+
+.campo input,
+.campo select {
+    width: 100%;
+
+    height: 40px;
+
+    border: 1px solid #dce3df;
+
+    border-radius: 7px;
+
+    padding: 0 10px;
+
+    outline: none;
+
+    font-size: 12px;
+
+    color: #26332e;
+
+    background: white;
+}
+
+.campo input:focus,
+.campo select:focus {
+    border-color: #b72d2d;
+
+    box-shadow: 0 0 0 2px rgba(183,45,45,.08);
+}
+
+
+/* =========================================================
+   RODAPÉ
+========================================================= */
+
+.modal-footer {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #edf0ee;
+}
+
+.btn-cancelar,
+.btn-salvar {
+    height: 38px;
+
+    padding: 0 16px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    font-size: 12px;
+}
+
+.btn-cancelar {
+    background: white;
+
+    border: 1px solid #d8dfdb;
+
+    color: #647169;
+}
+
+.btn-salvar {
+    background: #b72d2d;
+
+    color: white;
+
+    border: none;
+}
+
+.btn-salvar:hover {
+    background: #942222;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 70px;
+
+        padding: 20px 10px;
+    }
+
+    .logo-area div:not(.logo-icon),
+    .menu span,
+    .sidebar-bottom span {
+        display: none;
+    }
+
+    .logo-area {
+        justify-content: center;
+
+        padding: 0 0 25px;
+    }
+
+    .menu a,
+    .sidebar-bottom a {
+        justify-content: center;
+    }
+
+    .conteudo {
+        margin-left: 70px;
+
+        padding: 25px;
+    }
+
+}
+
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .conteudo {
+        padding: 20px 15px;
+    }
+
+    .topo {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 20px;
+    }
+
+    .topo h1 {
+        font-size: 27px;
+    }
+
+    .acoes {
+        flex-direction: column;
+    }
+
+    .pesquisa {
+        width: 100%;
+    }
+
+    .btn-novo {
+        justify-content: center;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .campo-grande {
+        grid-column: span 1;
+    }
+
+    .modal-conteudo {
+        width: 100%;
+    }
+
+}
