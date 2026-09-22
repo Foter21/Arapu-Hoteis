@@ -1,1219 +1,1011 @@
 :root {
-    --green-dark: #003d2b;
-    --green: #006b4f;
-    --green-light: #0c8a67;
-
-    --red: #b40000;
-    --red-dark: #920000;
-    --red-light: #d51b1b;
-
-    --bg: #f7f6f2;
-    --card: #ffffff;
-
-    --text: #202421;
-    --muted: #737874;
-
-    --border: #e5e4df;
-
-    --shadow: 0 3px 15px rgba(0, 0, 0, .05);
+    --verde-escuro: #073f31;
+    --verde: #086b52;
+    --verde-claro: #e9f4ef;
+    --vermelho: #b40000;
+    --vermelho-claro: #f9eded;
+    --fundo: #f3f5f4;
+    --branco: #fff;
+    --texto: #18221e;
+    --texto-secundario: #68736d;
+    --borda: #e1e6e3;
+    --sombra: 0 4px 18px rgba(15,37,28,.06);
+    --raio: 14px;
+    --sidebar: 250px;
+    --topbar: 78px;
 }
 
-
-/* =====================================================
-   RESET
-===================================================== */
-
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-html {
-    font-size: 16px;
+html,
+body {
+    width: 100%;
+    min-width: 320px;
+    min-height: 100%;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-
-    font-family: "Inter", Arial, sans-serif;
-
-    background: var(--bg);
-    color: var(--text);
-
-    font-size: 15px;
+    overflow-x: hidden;
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 button,
-select,
-input {
+input,
+select {
     font-family: inherit;
 }
 
-
-/* =====================================================
-   LOGO TOPBAR
-===================================================== */
-
-.topbar-logo {
-    height: 58px;
-    width: auto;
-    max-width: 100px;
-    object-fit: contain;
-    display: block;
+a {
+    text-decoration: none;
 }
 
+button {
+    cursor: pointer;
+}
 
-/* =====================================================
-   SIDEBAR
-===================================================== */
-
+/* SIDEBAR */
 .sidebar {
-    width: 266px;
-    height: 100vh;
-
-    background:
-        radial-gradient(
-            circle at 50% 90%,
-            rgba(40, 130, 80, .18),
-            transparent 35%
-        ),
-        linear-gradient(
-            180deg,
-            #003d2b 0%,
-            #004a34 50%,
-            #003d2b 100%
-        );
-
-    color: white;
-
-    display: flex;
-    flex-direction: column;
-
     position: fixed;
-
     top: 0;
     left: 0;
-    bottom: 0;
-
-    z-index: 1050;
-
+    width: var(--sidebar);
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: linear-gradient(180deg,#063b2e 0%,#084b39 52%,#063b2e 100%);
+    color: #fff;
     transition: transform .25s ease;
-
-    overflow-y: auto;
-    overflow-x: hidden;
 }
-
-.sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,.30);
-    border-radius: 10px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,.50);
-}
-
-
-/* =====================================================
-   LOGO SIDEBAR
-===================================================== */
 
 .logo {
-    height: 120px;
-    min-height: 120px;
-
+    min-height: 110px;
+    padding: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    gap: 12px;
-
-    border-bottom: 1px solid rgba(255,255,255,.06);
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
 }
 
 .logo-symbol {
-    width: 58px;
-    height: 75px;
-
+    width: 48px;
     display: flex;
-    align-items: center;
     justify-content: center;
-
     color: #d51b1b;
-
-    font-size: 62px;
-    line-height: 1;
+    font-size: 52px;
 }
 
 .logo-text strong {
     display: block;
-
-    font-family: Georgia, serif;
-
-    font-size: 30px;
-    letter-spacing: 1px;
+    font-family: Georgia,serif;
+    font-size: 28px;
+    line-height: 1;
 }
 
 .logo-text span {
     display: block;
-
-    font-size: 14px;
-    letter-spacing: 6px;
-
+    margin-top: 6px;
     text-align: center;
-
-    margin-top: 7px;
+    font-size: 11px;
+    letter-spacing: 5px;
 }
 
-
-/* =====================================================
-   MENU
-===================================================== */
-
 .menu {
-    padding: 20px 12px;
+    flex: 1;
+    min-height: 0;
+    padding: 18px 11px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.35) transparent;
+}
+
+.menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+.menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.menu::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.35);
+    border-radius: 10px;
+}
+
+.menu::-webkit-scrollbar-thumb:hover {
+    background: #b40000;
 }
 
 .menu-item {
-    height: 50px;
-
+    min-height: 45px;
+    margin-bottom: 6px;
+    padding: 0 14px;
     display: flex;
     align-items: center;
-
-    gap: 15px;
-
-    padding: 0 17px;
-
-    margin-bottom: 7px;
-
-    color: rgba(255,255,255,.95);
-
-    text-decoration: none;
-
-    border-radius: 8px;
-
-    font-size: 16px;
-
-    transition: all .2s ease;
+    gap: 13px;
+    border-radius: 9px;
+    color: rgba(255,255,255,.92);
+    font-size: 14px;
+    transition: .2s ease;
 }
 
 .menu-item i {
-    width: 22px;
-
+    width: 21px;
     text-align: center;
-
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .menu-item:hover {
-    background: rgba(255,255,255,.10);
-    color: white;
+    background: rgba(255,255,255,.08);
+    color: #fff;
 }
 
 .menu-item.active {
-    background:
-        linear-gradient(
-            90deg,
-            #c41616,
-            #a90000
-        );
-
-    color: white;
-
-    box-shadow:
-        0 5px 15px rgba(0,0,0,.12);
+    background: linear-gradient(90deg,#c01717,#a30000);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,.12);
 }
 
-
-/* =====================================================
-   SIDEBAR FOOTER
-===================================================== */
-
 .sidebar-footer {
+    flex: 0 0 auto;
+    max-height: 180px;
     margin-top: auto;
-
-    padding: 20px 12px 35px;
-
+    padding: 20px 14px 28px;
     text-align: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.35) transparent;
+}
+
+.sidebar-footer::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar-footer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-footer::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.35);
+    border-radius: 10px;
+}
+
+.sidebar-footer::-webkit-scrollbar-thumb:hover {
+    background: #b40000;
 }
 
 .footer-logo {
-    font-size: 80px;
-
-    line-height: 70px;
-
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+    font-size: 60px;
+    line-height: .9;
 }
 
 .sidebar-footer strong {
     display: block;
-
-    font-family: Georgia, serif;
-
-    color: #d4a735;
-
-    font-size: 17px;
-
-    letter-spacing: 3px;
+    color: #d8b45a;
+    font-family: Georgia,serif;
+    font-size: 14px;
+    letter-spacing: 2px;
 }
 
 .sidebar-footer span {
     display: block;
-
-    color: white;
-
-    font-size: 14px;
-
-    margin-top: 12px;
+    margin-top: 7px;
+    font-size: 11px;
+    color: rgba(255,255,255,.82);
 }
 
-
-/* =====================================================
-   MAIN
-===================================================== */
-
+/* CONTEÚDO */
 .main {
-    margin-left: 266px;
-
-    width: calc(100% - 266px);
-
+    width: calc(100% - var(--sidebar));
     min-height: 100vh;
+    margin-left: var(--sidebar);
 }
-
-
-/* =====================================================
-   TOPBAR
-===================================================== */
 
 .topbar {
-    height: 88px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #b40000,
-            #990000
-        );
-
-    color: white;
-
+    width: 100%;
+    height: var(--topbar);
+    padding: 0 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    padding: 0 30px;
+    gap: 16px;
+    background: linear-gradient(90deg,#b40000 0%,#970000 100%);
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(100,0,0,.12);
 }
 
 .topbar-left {
     display: flex;
     align-items: center;
-
-    gap: 22px;
+    gap: 14px;
 }
 
 .topbar-left strong {
     display: block;
-
-    font-size: 21px;
-    font-weight: 700;
+    font-size: 18px;
 }
 
 .topbar-left span {
     display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    opacity: .82;
+}
 
-    font-size: 15px;
-
-    margin-top: 4px;
-
-    opacity: .9;
+.topbar-logo {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
 }
 
 .mobile-menu {
     display: none;
-
-    background: transparent;
-
-    color: white;
-
     border: 0;
-
-    font-size: 25px;
-
-    cursor: pointer;
+    background: transparent;
+    color: #fff;
+    font-size: 23px;
 }
 
 .topbar-right {
     display: flex;
-
     align-items: center;
+    gap: 16px;
+}
 
-    gap: 25px;
+.notification,
+.logout {
+    border: 0;
+    background: transparent;
+    color: #fff;
 }
 
 .notification {
     position: relative;
-
-    background: transparent;
-
-    color: white;
-
-    border: 0;
-
-    font-size: 24px;
-
-    cursor: pointer;
+    font-size: 20px;
 }
 
 .notification b {
     position: absolute;
-
     top: -7px;
     right: -8px;
-
-    width: 18px;
-    height: 18px;
-
-    border-radius: 50%;
-
-    background: #008a64;
-
-    color: white;
-
-    font-size: 10px;
-
+    width: 17px;
+    height: 17px;
     display: flex;
-
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    background: var(--verde);
+    font-size: 9px;
 }
 
 .user {
     display: flex;
-
     align-items: center;
-
-    gap: 12px;
+    gap: 9px;
 }
 
 .avatar {
-    width: 45px;
-    height: 45px;
-
-    border-radius: 50%;
-
-    background:
-        linear-gradient(
-            135deg,
-            #eee,
-            #d5d5d5
-        );
-
-    color: #9b0000;
-
+    width: 39px;
+    height: 39px;
     display: flex;
-
     align-items: center;
     justify-content: center;
-
-    font-size: 13px;
-
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #e5e5e5;
+    color: var(--vermelho);
+    font-size: 11px;
     font-weight: 700;
+}
 
-    border: 2px solid white;
+.user-info span,
+.user-info strong {
+    display: block;
 }
 
 .user-info span {
-    display: block;
-
-    font-size: 13px;
-
-    opacity: .8;
+    font-size: 10px;
+    opacity: .75;
 }
 
 .user-info strong {
-    display: block;
-
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .user-arrow {
-    font-size: 12px;
-
-    margin-left: 3px;
+    font-size: 10px;
 }
 
 .logout {
-    color: white;
-
-    background: transparent;
-
-    border: 0;
-
-    font-size: 15px;
-
     display: flex;
-
     align-items: center;
-
-    gap: 8px;
-
-    cursor: pointer;
+    gap: 6px;
+    font-size: 12px;
 }
-
-
-/* =====================================================
-   CONTENT
-===================================================== */
 
 .content {
     width: 100%;
-
-    max-width: 1600px;
-
+    max-width: 1650px;
     margin: 0 auto;
-
-    padding: 32px;
+    padding: 24px;
 }
 
-
-/* =====================================================
-   WELCOME
-===================================================== */
-
 .welcome {
+    margin-bottom: 19px;
     display: flex;
-
-    justify-content: space-between;
     align-items: center;
-
-    margin-bottom: 25px;
+    justify-content: space-between;
+    gap: 18px;
 }
 
 .welcome h1 {
-    margin: 0;
-
-    font-size: 29px;
-
-    color: #064b37;
-
-    font-weight: 700;
+    color: var(--verde-escuro);
+    font-size: 27px;
+    line-height: 1.1;
 }
 
 .welcome p {
-    font-size: 15px;
-
-    color: var(--muted);
-
-    margin: 7px 0 0;
+    margin-top: 6px;
+    color: var(--texto-secundario);
+    font-size: 13px;
 }
 
 .date-box {
-    background: #f1f4ef;
-
-    border: 1px solid #e1e5df;
-
-    border-radius: 10px;
-
-    padding: 14px 18px;
-
+    padding: 10px 13px;
     display: flex;
-
     align-items: center;
-
-    gap: 13px;
+    gap: 9px;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    background: var(--branco);
+    box-shadow: var(--sombra);
 }
 
 .date-box > i {
-    color: var(--green);
+    color: var(--verde);
+    font-size: 19px;
+}
 
-    font-size: 24px;
+.date-box strong,
+.date-box span {
+    display: block;
 }
 
 .date-box strong {
-    display: block;
-
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .date-box span {
-    display: block;
-
-    font-size: 12px;
-
-    color: var(--muted);
-
-    margin-top: 3px;
+    margin-top: 2px;
+    color: var(--texto-secundario);
+    font-size: 10px;
 }
 
-
-/* =====================================================
-   STATS
-===================================================== */
-
+/* CARDS */
 .stats-grid {
     display: grid;
-
-    grid-template-columns:
-        repeat(6, minmax(0, 1fr));
-
-    gap: 15px;
-
-    margin-bottom: 20px;
+    grid-template-columns: repeat(6,minmax(0,1fr));
+    gap: 12px;
+    margin-bottom: 18px;
 }
 
 .stat-card {
-    background: white;
-
-    border: 1px solid var(--border);
-
-    border-radius: 10px;
-
-    min-height: 115px;
-
-    padding: 18px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    box-shadow: var(--shadow);
-
-    transition: .2s;
-
     min-width: 0;
+    min-height: 100px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background: var(--branco);
+    box-shadow: var(--sombra);
+    transition: transform .2s ease,box-shadow .2s ease;
 }
 
 .stat-card:hover {
     transform: translateY(-2px);
-
-    box-shadow:
-        0 7px 20px rgba(0,0,0,.08);
+    box-shadow: 0 9px 25px rgba(15,37,28,.09);
 }
 
 .stat-icon {
-    width: 50px;
-    height: 50px;
-
-    min-width: 50px;
-
-    border-radius: 10px;
-
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     display: flex;
-
     align-items: center;
     justify-content: center;
-
-    color: white;
-
-    font-size: 21px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 17px;
 }
 
 .stat-icon.green {
-    background: var(--green-dark);
+    background: var(--verde-escuro);
 }
 
 .stat-icon.red {
-    background: var(--red);
+    background: var(--vermelho);
 }
 
 .stat-info {
     min-width: 0;
 }
 
-.stat-info strong {
+.stat-info strong,
+.stat-info span,
+.stat-info small {
     display: block;
+}
 
-    font-size: 27px;
-
+.stat-info strong {
+    font-size: 23px;
     line-height: 1;
-
     white-space: nowrap;
 }
 
 .stat-info span {
-    display: block;
-
-    font-size: 15px;
-
-    font-weight: 600;
-
-    margin-top: 6px;
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .stat-info small {
-    display: block;
-
-    font-size: 12px;
-
-    color: var(--muted);
-
-    margin-top: 4px;
+    margin-top: 3px;
+    color: var(--texto-secundario);
+    font-size: 10px;
 }
 
 .stat-info.revenue strong {
-    font-size: 17px;
+    font-size: 16px;
 }
 
-
-/* =====================================================
-   DASHBOARD GRID
-===================================================== */
-
+/* PAINÉIS */
 .dashboard-grid {
+    width: 100%;
     display: grid;
-
-    gap: 15px;
-
-    width: 100%;
-
-    margin-bottom: 20px;
+    grid-template-columns: minmax(0,1.18fr) minmax(400px,.82fr);
+    grid-template-areas:
+        "ocupacao reservas"
+        "movimentos faturamento"
+        "alertas alertas";
+    gap: 18px;
+    align-items: start;
 }
 
-
-/*
-   PRIMEIRA LINHA
-
-   GRÁFICO DE OCUPAÇÃO + RESERVAS
-   Ficam lado a lado.
-*/
-
-.first-row {
-    grid-template-columns:
-        minmax(420px, .95fr)
-        minmax(0, 1.65fr);
-
-    align-items: stretch;
-}
-
-
-/* =====================================================
-   SEGUNDA LINHA
-===================================================== */
-
+.first-row,
 .second-row {
-    grid-template-columns:
-        minmax(0, 1.35fr)
-        minmax(0, 1fr);
+    display: contents;
 }
 
-
-/* =====================================================
-   PAINEL
-===================================================== */
-
-.panel {
-    background: white;
-
-    border: 1px solid var(--border);
-
-    border-radius: 10px;
-
-    box-shadow: var(--shadow);
-
-    overflow: hidden;
-
-    min-width: 0;
-
+.panel,
+.occupation-panel,
+.reservations-panel,
+.movements-panel,
+.billing-panel,
+.alerts-panel {
     width: 100%;
+    min-width: 0;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    background: var(--branco);
+    overflow: hidden;
+    box-shadow: var(--sombra);
+    transition: box-shadow .2s ease,transform .2s ease;
+}
+
+.panel:hover,
+.occupation-panel:hover,
+.reservations-panel:hover,
+.movements-panel:hover,
+.billing-panel:hover,
+.alerts-panel:hover {
+    box-shadow: 0 9px 26px rgba(15,37,28,.09);
+}
+
+.occupation-panel {
+    grid-area: ocupacao;
+}
+
+.reservations-panel {
+    grid-area: reservas;
+}
+
+.movements-panel {
+    grid-area: movimentos;
+}
+
+.billing-panel {
+    grid-area: faturamento;
+}
+
+.alerts-panel {
+    grid-area: alertas;
 }
 
 .panel-header {
-    min-height: 58px;
-
-    padding: 15px 18px;
-
+    min-height: 62px;
+    padding: 14px 18px;
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
-    gap: 15px;
-
-    border-bottom: 1px solid #efeee9;
+    gap: 14px;
+    border-bottom: 1px solid var(--borda);
 }
 
-.panel-header h2 {
+.panel-header h2,
+.panel-title h2 {
     margin: 0;
-
+    color: var(--texto);
     font-size: 16px;
-
-    font-weight: 700;
-
+    line-height: 1.2;
     display: flex;
-
     align-items: center;
-
     gap: 9px;
-
-    min-width: 0;
 }
 
-.panel-header h2 i {
-    color: var(--red);
-
-    font-size: 17px;
-
-    flex-shrink: 0;
+.panel-header h2 i,
+.panel-title h2 i {
+    color: var(--vermelho);
 }
 
 .panel-header select {
-    border: 1px solid #ddd;
-
-    border-radius: 7px;
-
-    background: #fafafa;
-
-    padding: 8px 12px;
-
-    font-size: 13px;
-
-    cursor: pointer;
-
-    flex-shrink: 0;
+    height: 34px;
+    min-width: 110px;
+    padding: 0 9px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    outline: none;
+    background: #fafbfa;
+    color: var(--texto);
+    font-size: 11px;
 }
 
-
-/* =====================================================
-   PAINEL DE OCUPAÇÃO
-===================================================== */
-
-.occupation-panel {
-    min-width: 0;
-
-    width: 100%;
-}
-
+/* OCUPAÇÃO */
 .occupation-content {
-    width: 100%;
-
-    min-height: 350px;
-
-    padding: 28px 24px;
-
+    min-height: 330px;
+    padding: 30px 26px;
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
-    gap: 28px;
+    gap: 30px;
 }
-
-
-/* =====================================================
-   DONUT
-===================================================== */
 
 .donut {
     --ocupacao: 0%;
-
+    position: relative;
     width: 205px;
     height: 205px;
-
     min-width: 205px;
-    min-height: 205px;
-
     border-radius: 50%;
-
-    background:
-        conic-gradient(
-            var(--green-dark) 0% var(--ocupacao),
-            var(--red) var(--ocupacao) 100%
-        );
-
-    position: relative;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
-
-    flex-shrink: 0;
+    background: conic-gradient(var(--verde-escuro) 0 var(--ocupacao),var(--vermelho) var(--ocupacao) 100%);
 }
 
 .donut::before {
     content: "";
-
     position: absolute;
-
-    width: 128px;
-    height: 128px;
-
-    background: white;
-
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
+    background: var(--branco);
 }
 
 .donut-center {
     position: relative;
-
-    z-index: 2;
-
+    z-index: 1;
     text-align: center;
-
-    width: 100%;
 }
 
 .donut-center strong {
     display: block;
-
-    font-size: 36px;
-
+    font-size: 35px;
     line-height: 1;
-
-    color: #111;
-
-    font-weight: 700;
 }
 
 .donut-center span {
     display: block;
-
-    font-size: 12px;
-
-    color: #222;
-
-    margin-top: 7px;
+    margin-top: 6px;
+    font-size: 11px;
 }
 
-
-/* =====================================================
-   INFORMAÇÕES DO GRÁFICO
-===================================================== */
-
 .occupation-info {
-    width: 175px;
-
-    min-width: 175px;
-
-    max-width: 175px;
+    width: 180px;
+    min-width: 180px;
 }
 
 .legend-item {
     display: flex;
-
     align-items: flex-start;
-
-    gap: 11px;
-
-    margin-bottom: 24px;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .legend-dot {
     width: 15px;
     height: 15px;
-
     min-width: 15px;
-
+    margin-top: 2px;
     border-radius: 50%;
-
-    margin-top: 3px;
 }
 
 .green-dot {
-    background: var(--green-dark);
+    background: var(--verde-escuro);
 }
 
 .red-dot {
-    background: var(--red);
+    background: var(--vermelho);
 }
 
-.legend-item div {
-    min-width: 0;
+.legend-item strong,
+.legend-item span {
+    display: block;
 }
 
 .legend-item strong {
-    display: block;
-
-    font-size: 14px;
-
-    line-height: 1.3;
-
-    white-space: nowrap;
+    font-size: 13px;
 }
 
 .legend-item span {
-    display: block;
-
-    color: var(--muted);
-
-    font-size: 13px;
-
-    margin-top: 5px;
+    margin-top: 3px;
+    color: var(--texto-secundario);
+    font-size: 11px;
 }
 
 .total-rooms {
-    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    background: #f5f4f1;
+}
 
-    background: #f6f5f2;
-
-    border-radius: 9px;
-
-    padding: 13px 14px;
+.total-rooms span,
+.total-rooms strong {
+    display: block;
 }
 
 .total-rooms span {
-    display: block;
-
-    font-size: 11px;
-
-    color: var(--muted);
+    color: var(--texto-secundario);
+    font-size: 10px;
 }
 
 .total-rooms strong {
-    display: block;
-
+    margin-top: 3px;
     font-size: 22px;
-
-    margin-top: 5px;
 }
 
+/* RESERVAS */
+.reservations-panel .panel-header {
+    min-height: 82px;
+    align-items: flex-start;
+}
 
-/* =====================================================
-   RESERVAS
-===================================================== */
-
-.reservations-panel {
+.panel-title {
     min-width: 0;
+}
 
-    height: 100%;
+.panel-title p {
+    margin-top: 5px;
+    color: var(--texto-secundario);
+    font-size: 10px;
+}
+
+.reservation-filter {
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.filter-group label {
+    color: var(--texto-secundario);
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.filter-group select {
+    width: 100px;
+    height: 34px;
+    padding: 0 8px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    outline: none;
+    background: #fafbfa;
+    color: var(--texto);
+    font-size: 10px;
+}
+
+.btn-filtrar {
+    height: 34px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--verde-escuro);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    transition: .2s ease;
+}
+
+.btn-filtrar:hover {
+    background: var(--verde);
+}
+
+.reservation-summary {
+    padding: 10px 16px 4px;
+}
+
+.reservation-summary strong {
+    color: var(--verde-escuro);
+    font-size: 17px;
+}
+
+.reservation-summary span {
+    margin-left: 5px;
+    color: var(--texto-secundario);
+    font-size: 10px;
 }
 
 .reservation-list {
-    padding: 4px 16px 8px;
+    padding: 2px 16px 8px;
 }
 
 .reservation {
-    min-height: 61px;
-
-    display: flex;
-
+    min-height: 60px;
+    padding: 8px 0;
+    display: grid;
+    grid-template-columns: 32px minmax(0,1fr) auto auto;
     align-items: center;
-
-    gap: 10px;
-
-    border-bottom: 1px solid #f0efec;
-
-    transition: background .15s;
-
-    min-width: 0;
-}
-
-.reservation:hover {
-    background: #fafaf8;
+    gap: 9px;
+    border-bottom: 1px solid #edf0ee;
 }
 
 .reservation:last-child {
     border-bottom: 0;
 }
 
+.reservation:hover {
+    background: #fbfcfb;
+}
+
 .guest-avatar {
-    width: 36px;
-    height: 36px;
-
-    min-width: 36px;
-
-    border-radius: 50%;
-
-    background: #eee8df;
-
-    color: #674c3f;
-
+    width: 32px;
+    height: 32px;
     display: flex;
-
     align-items: center;
     justify-content: center;
-
-    font-size: 10px;
-
+    border-radius: 50%;
+    background: #eee8df;
+    color: #674c3f;
+    font-size: 9px;
     font-weight: 700;
 }
 
 .reservation-info {
-    flex: 1;
-
     min-width: 0;
 }
 
-.reservation-info strong {
+.reservation-info strong,
+.reservation-info span {
     display: block;
-
-    font-size: 13px;
-
-    white-space: nowrap;
-
     overflow: hidden;
-
     text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.reservation-info strong {
+    font-size: 11px;
 }
 
 .reservation-info span {
-    display: block;
-
-    color: #555;
-
-    font-size: 10px;
-
-    margin-top: 4px;
-
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
+    margin-top: 3px;
+    color: #66706b;
+    font-size: 9px;
 }
 
-.reservation-date {
-    font-size: 10px;
+.reservation-info i {
+    margin-right: 3px;
+    color: var(--verde);
+}
 
-    color: #555;
+.separator {
+    margin: 0 3px;
+    color: #aaa;
+}
 
+.reservation-dates {
+    display: flex;
+    gap: 11px;
+}
+
+.reservation-dates div {
+    min-width: 56px;
+}
+
+.reservation-dates small,
+.reservation-dates strong {
+    display: block;
+}
+
+.reservation-dates small {
+    margin-bottom: 2px;
+    color: var(--texto-secundario);
+    font-size: 8px;
+}
+
+.reservation-dates strong {
+    color: #4d5752;
+    font-size: 9px;
     white-space: nowrap;
+}
 
-    flex-shrink: 0;
+.reservation-status {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .status {
-    display: inline-block;
-
-    border-radius: 15px;
-
-    padding: 5px 8px;
-
-    font-size: 9px;
-
+    min-width: 66px;
+    padding: 4px 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 8px;
+    font-weight: 700;
     white-space: nowrap;
-
-    flex-shrink: 0;
 }
 
 .status.confirmed {
     color: #087443;
-
     background: #e4f3e8;
 }
 
 .status.pending {
-    color: #a45c00;
-
+    color: #9c5c00;
     background: #fff0d6;
+}
+
+.status.cancelled {
+    color: #9f0000;
+    background: #f8dddd;
+}
+
+.status.finished {
+    color: #555;
+    background: #e9e9e9;
+}
+
+.no-reservations {
+    min-height: 185px;
+    padding: 25px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--texto-secundario);
+}
+
+.no-reservations i {
+    margin-bottom: 10px;
+    color: #b8bdb9;
+    font-size: 27px;
+}
+
+.no-reservations strong {
+    color: var(--texto);
+    font-size: 12px;
+}
+
+.no-reservations span {
+    max-width: 270px;
+    margin-top: 5px;
+    font-size: 10px;
+    line-height: 1.45;
 }
 
 .view-all {
     width: 100%;
-
-    background: transparent;
-
-    color: var(--red);
-
+    padding: 10px;
     border: 0;
-
-    font-size: 12px;
-
-    padding: 11px;
-
-    border-top: 1px solid #efeee9;
-
-    cursor: pointer;
+    border-top: 1px solid var(--borda);
+    background: transparent;
+    color: var(--vermelho);
+    font-size: 10px;
+    transition: .2s ease;
 }
 
+.view-all:hover {
+    background: #fff8f8;
+}
 
-/* =====================================================
-   MOVIMENTAÇÕES
-===================================================== */
-
+/* MOVIMENTAÇÕES */
 .movements-panel {
-    padding-bottom: 12px;
+    padding-bottom: 14px;
 }
 
 .movement-box {
-    margin: 14px;
-
-    padding: 14px;
-
-    border-radius: 10px;
-
-    background: #fafaf8;
+    margin: 12px 14px 0;
+    padding: 13px;
+    border-radius: 11px;
 }
 
 .checkin-box {
-    background: #f4f8f4;
+    background: var(--verde-claro);
 }
 
 .checkout-box {
-    background: #faf4f4;
+    background: var(--vermelho-claro);
 }
 
 .movement-title {
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
-    font-size: 14px;
-
+    margin-bottom: 9px;
+    font-size: 12px;
     font-weight: 700;
-
-    margin-bottom: 10px;
 }
 
 .checkin-box .movement-title {
-    color: var(--green);
+    color: var(--verde);
 }
 
 .checkout-box .movement-title {
-    color: var(--red);
+    color: var(--vermelho);
 }
 
 .movement-title strong {
-    width: 31px;
-    height: 31px;
-
+    width: 29px;
+    height: 29px;
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
-
-    color: white;
-
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .checkin-box .movement-title strong {
     background: #dcecdf;
-
-    color: var(--green);
+    color: var(--verde);
 }
 
 .checkout-box .movement-title strong {
-    background: #f4d9d9;
-
-    color: var(--red);
+    background: #f5dada;
+    color: var(--vermelho);
 }
 
 .hotel-row {
+    min-height: 30px;
+    padding: 6px 0;
     display: flex;
-
     justify-content: space-between;
-
-    padding: 8px 0;
-
-    border-bottom: 1px solid #e9e8e4;
-
-    font-size: 13px;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(70,100,85,.12);
+    font-size: 10px;
 }
 
 .hotel-row:last-child {
@@ -1221,280 +1013,190 @@ input {
 }
 
 .hotel-row strong {
-    font-size: 13px;
+    font-size: 10px;
 }
 
-
-/* =====================================================
-   GRÁFICO DE FATURAMENTO
-===================================================== */
-
+/* FATURAMENTO */
 .billing-panel {
-    min-height: 285px;
+    min-height: 300px;
 }
 
 .chart {
-    height: 235px;
-
+    height: 245px;
+    padding: 22px 16px 25px 10px;
     display: flex;
-
-    padding: 25px 28px 25px 18px;
 }
 
 .chart-y {
-    width: 80px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: space-between;
-
+    width: 58px;
     padding-bottom: 25px;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     text-align: right;
 }
 
 .chart-y span {
-    font-size: 11px;
-
     color: #777;
+    font-size: 8px;
 }
 
 .bars {
-    flex: 1;
-
-    display: flex;
-
-    align-items: flex-end;
-
-    justify-content: space-around;
-
     position: relative;
-
-    border-bottom: 1px solid #ddd;
-
-    background:
-        repeating-linear-gradient(
-            to bottom,
-            transparent 0,
-            transparent 30px,
-            #eeeeec 31px
-        );
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    border-bottom: 1px solid #b3bbb6;
+    background-image: repeating-linear-gradient(to bottom,transparent 0,transparent 30px,#aeb7b1 30px,#aeb7b1 31px);
 }
 
 .bar-column {
-    width: 42px;
-
-    height: 100%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: flex-end;
-
     position: relative;
+    width: 34px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
 }
 
 .bar {
-    width: 28px;
-
-    background: var(--green-dark);
-
+    width: 22px;
+    min-height: 3px;
     border-radius: 4px 4px 0 0;
+    background: var(--verde-escuro);
+    transition: height .45s ease,opacity .2s ease;
+}
 
-    transition: height .6s ease;
+.bar:hover {
+    opacity: .8;
 }
 
 .bar.today {
-    background: var(--red);
+    background: var(--vermelho);
 }
 
 .bar-column span {
-    font-size: 12px;
-
-    color: #666;
-
     position: absolute;
-
-    bottom: -22px;
+    bottom: -21px;
+    color: #666;
+    font-size: 8px;
 }
 
-
-/* =====================================================
-   ALERTAS
-===================================================== */
-
+/* ALERTAS */
 .alerts-panel {
-    min-height: 285px;
+    min-height: 190px;
 }
 
 .alert-list {
-    padding: 8px 16px 14px;
+    padding: 9px 14px 14px;
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 9px;
 }
 
 .alert-item {
-    min-height: 70px;
-
+    min-height: 64px;
+    padding: 9px 10px;
     display: grid;
-
-    grid-template-columns:
-        42px
-        1fr
-        20px;
-
+    grid-template-columns: 32px minmax(0,1fr) 15px;
     align-items: center;
-
-    gap: 13px;
-
-    padding: 10px 12px;
-
-    border-bottom: 1px solid #efeee9;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    transition: .2s;
+    gap: 8px;
+    border: 1px solid #edf0ee;
+    border-radius: 10px;
+    transition: .2s ease;
 }
 
 .alert-item:hover {
-    background: #fafaf8;
-}
-
-.alert-item:last-child {
-    border-bottom: 0;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(15,37,28,.05);
 }
 
 .alert-icon {
-    width: 36px;
-    height: 36px;
-
+    width: 32px;
+    height: 32px;
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
+    font-size: 13px;
+}
 
-    font-size: 16px;
+.alert-item strong,
+.alert-item span {
+    display: block;
 }
 
 .alert-item strong {
-    display: block;
-
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .alert-item span {
-    display: block;
-
-    font-size: 11px;
-
-    color: var(--muted);
-
-    margin-top: 4px;
+    margin-top: 3px;
+    color: var(--texto-secundario);
+    font-size: 9px;
 }
 
 .alert-item > i:last-child {
-    font-size: 13px;
-
-    color: #222;
+    color: #666;
+    font-size: 9px;
 }
 
 .alert-item.danger {
-    background: #fbf0ef;
+    background: #fff6f4;
 }
 
 .alert-item.danger .alert-icon {
     background: #ffe0df;
-
-    color: var(--red);
+    color: var(--vermelho);
 }
 
 .alert-item.warning .alert-icon {
     background: #fff0d1;
-
-    color: #e89a00;
+    color: #d98900;
 }
 
 .alert-item.success .alert-icon {
     background: #dff2e4;
-
     color: #15904f;
 }
 
-
-/* =====================================================
-   RESPONSIVIDADE
-===================================================== */
-
-@media (max-width: 1400px) {
-
-    .content {
-        padding: 25px;
-    }
-
+/* RESPONSIVO */
+@media (max-width: 1450px) {
     .stats-grid {
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(3,minmax(0,1fr));
     }
 
-    .first-row {
-        grid-template-columns:
-            minmax(390px, .9fr)
-            minmax(0, 1.1fr);
+    .dashboard-grid {
+        grid-template-columns: minmax(0,1.08fr) minmax(370px,.92fr);
     }
 
     .occupation-content {
-        gap: 18px;
-
-        padding-left: 18px;
-        padding-right: 18px;
+        gap: 22px;
+        padding-left: 22px;
+        padding-right: 22px;
     }
 
     .donut {
-        width: 180px;
-        height: 180px;
-
-        min-width: 180px;
-        min-height: 180px;
+        width: 185px;
+        height: 185px;
+        min-width: 185px;
     }
 
     .donut::before {
-        width: 112px;
-        height: 112px;
+        width: 116px;
+        height: 116px;
     }
 
     .occupation-info {
-        width: 155px;
-        min-width: 155px;
-        max-width: 155px;
-    }
-
-    .legend-item strong {
-        font-size: 13px;
-    }
-
-    .movements-panel {
-        grid-column: span 2;
-    }
-
-    .second-row {
-        grid-template-columns: 1fr;
+        width: 160px;
+        min-width: 160px;
     }
 }
 
-
-/* =====================================================
-   TABLET / TELA MÉDIA
-===================================================== */
-
-@media (max-width: 1199px) {
-
+@media (max-width: 1200px) {
     .sidebar {
         transform: translateX(-100%);
     }
@@ -1504,122 +1206,113 @@ input {
     }
 
     .main {
-        margin-left: 0;
-
         width: 100%;
+        margin-left: 0;
     }
 
     .mobile-menu {
         display: block;
     }
 
-    .first-row {
-        grid-template-columns: 1fr;
+    .dashboard-grid {
+        grid-template-columns: minmax(0,1fr) minmax(330px,.82fr);
     }
 
-    .occupation-content {
-        min-height: 350px;
-    }
-
-    .reservations-panel {
-        width: 100%;
+    .alert-list {
+        grid-template-columns: repeat(2,minmax(0,1fr));
     }
 }
 
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 800px) {
-
+@media (max-width: 900px) {
     .content {
         padding: 20px;
     }
 
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "ocupacao"
+            "reservas"
+            "movimentos"
+            "faturamento"
+            "alertas";
+    }
+
+    .occupation-content {
+        min-height: 320px;
+    }
+
+    .reservations-panel .panel-header {
+        flex-wrap: wrap;
+    }
+
+    .reservation-filter {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 700px) {
+    .topbar {
+        padding: 0 16px;
+    }
+
+    .user-info,
+    .user-arrow,
+    .logout span {
+        display: none;
+    }
+
+    .topbar-right {
+        gap: 11px;
+    }
+
     .welcome {
-        flex-direction: column;
-
         align-items: flex-start;
-
-        gap: 15px;
+        flex-direction: column;
     }
 
     .date-box {
         width: 100%;
     }
 
-    .stats-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-
     .occupation-content {
+        min-height: 0;
+        padding: 28px 18px;
         flex-direction: column;
-
-        min-height: auto;
-
-        padding: 30px 20px;
-
-        gap: 30px;
-    }
-
-    .donut {
-        width: 190px;
-        height: 190px;
-
-        min-width: 190px;
-        min-height: 190px;
-    }
-
-    .donut::before {
-        width: 120px;
-        height: 120px;
-    }
-
-    .donut-center strong {
-        font-size: 33px;
     }
 
     .occupation-info {
         width: 100%;
-
-        max-width: 250px;
-
+        max-width: 280px;
         min-width: 0;
     }
 
-    .topbar-right {
-        gap: 12px;
-    }
-
-    .user-info,
-    .user-arrow {
-        display: none;
-    }
-
-    .reservation {
-        gap: 8px;
+    .alert-list {
+        grid-template-columns: 1fr;
     }
 }
 
-
-/* =====================================================
-   CELULAR
-===================================================== */
-
-@media (max-width: 550px) {
+@media (max-width: 520px) {
+    :root {
+        --topbar: 70px;
+    }
 
     .topbar {
-        padding: 0 15px;
+        padding: 0 12px;
+    }
 
-        height: 75px;
+    .topbar-left strong {
+        font-size: 15px;
+    }
+
+    .topbar-left span {
+        font-size: 10px;
     }
 
     .topbar-logo {
-        height: 48px;
-
-        max-width: 85px;
+        height: 40px;
+        max-width: 72px;
     }
 
     .content {
@@ -1630,73 +1323,55 @@ input {
         grid-template-columns: 1fr;
     }
 
-    .stat-card {
-        min-height: 100px;
-    }
-
     .welcome h1 {
-        font-size: 23px;
+        font-size: 21px;
     }
 
     .panel-header {
         padding: 13px 14px;
     }
 
-    .panel-header h2 {
-        font-size: 14px;
+    .reservations-panel .panel-header {
+        min-height: auto;
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .panel-header select {
-        padding: 7px 9px;
-
-        font-size: 12px;
+    .reservation-filter {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 
-    .occupation-content {
-        padding: 25px 15px;
+    .filter-group select,
+    .btn-filtrar {
+        width: 100%;
+    }
+
+    .btn-filtrar {
+        grid-column: 1 / -1;
+    }
+
+    .reservation {
+        grid-template-columns: 32px minmax(0,1fr) auto;
+    }
+
+    .reservation-dates {
+        display: none;
     }
 
     .donut {
-        width: 180px;
-        height: 180px;
-
-        min-width: 180px;
-        min-height: 180px;
+        width: 175px;
+        height: 175px;
+        min-width: 175px;
     }
 
     .donut::before {
-        width: 112px;
-        height: 112px;
+        width: 110px;
+        height: 110px;
     }
 
     .donut-center strong {
         font-size: 31px;
-    }
-
-    .reservation-date {
-        display: none;
-    }
-
-    .reservation-info strong {
-        font-size: 12px;
-    }
-
-    .reservation-info span {
-        font-size: 9px;
-    }
-
-    .status {
-        font-size: 8px;
-
-        padding: 4px 7px;
-    }
-
-    .chart {
-        padding-left: 8px;
-        padding-right: 10px;
-    }
-
-    .chart-y {
-        width: 65px;
     }
 }
